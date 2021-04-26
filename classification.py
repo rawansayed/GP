@@ -58,7 +58,7 @@ for i in range(len(encoder_channel_size)):
     # AE = AE + betas[i]
     # AE = relu(AE)
 
-cls_channel_size = [512, 512, 1024, 2]
+cls_channel_size = [512, 512, 1024,2]
 for i in range(len(cls_channel_size)-1):
     if i==0:
         AE = conv_2d(AE,cls_channel_size[i], [1, 3], strides=2,bias=False,activation=None,name=f"convCls_{i}")
@@ -71,13 +71,22 @@ for i in range(len(cls_channel_size)-1):
     # AE = relu(AE)
     AE=sigmoid(AE)
 
+# AE=AE.reshape([None,1,1,2])
 AE = conv_2d(AE,cls_channel_size[3], [1, 1],bias=False,activation=None,name="convCls_3")
 # AE = AE + betas[i]
 AE = tf.nn.softmax(AE)
+
+# AE.set_shape([None,1,1,2])
 print(AE.shape)
+AE=tf.reshape(AE, (-1,1,1,8))
+print(AE.shape)
+
 AE = tf.squeeze(AE, axis=[1, 2])[:, 1]
 
-AE = regression(AE, optimizer='adam', learning_rate=0.0001, loss='sparse_categorical_crossentropy', name='target')
+print(AE.shape)
+# AE = tf.squeeze(AE, axis=[1, 2])[:, 1]
+
+AE = regression(AE, optimizer='adam', learning_rate=0.0001, loss='categorical_crossentropy', name='target')
 
 
 # Training the network
@@ -86,7 +95,7 @@ tensorboard_dir = 'MNIST_tflearn_board/',
 checkpoint_path = 'MNIST_tflearn_checkpoints/checkpoint')
 
 
-model.load("./TrainingAutoEncoder/autoencoder/model.tfl")
+# model.load("./TrainingAutoEncoder/autoencoder/model.tfl")
 
 
 

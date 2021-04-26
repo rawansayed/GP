@@ -19,7 +19,7 @@ batch_size=256
 # x, y = input_data.get_dataset()
 # X = np.expand_dims(x, axis=2)
 # np.save("inputs.npy",X)
-# np.save("labels.npy",y)
+# np.save("labels.npy")
 
 #######################################################################################################
 X=np.load("inputs.npy")
