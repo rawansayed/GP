@@ -43,8 +43,8 @@ def create_auto_encoder():
 
     # Training the network
     auto_encoder = tflearn.DNN(AE,tensorboard_verbose=0,
-    tensorboard_dir = './TrainingAutoEncoder/autoencoder/AE',
-    checkpoint_path = './TrainingAutoEncoder/autoencoder/AE/checkpoint')
+    tensorboard_dir = './TrainingOutputs/autoencoder/AE',
+    checkpoint_path = './TrainingOutputs/autoencoder/AE/checkpoint')
 
     return auto_encoder
 
@@ -75,15 +75,15 @@ def main():
 
 
 
-    model.save("./TrainingAutoEncoder/autoencoder/model.tfl")
+    model.save("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl")
 
     df=pd.DataFrame(X[0].reshape(8, 23))
-    df.to_csv("./TrainingAutoEncoder/inputs.csv")
+    df.to_csv("./TrainingOutputs/inputs.csv")
 
     encode_decode = model.predict(X[0].reshape(1,8, 1, 23))
     output=np.array(encode_decode)
     output[:] = output[:]>0.5
     df=pd.DataFrame(output.reshape(8, 23))
-    df.to_csv("./TrainingAutoEncoder/outputs.csv")
+    df.to_csv("./TrainingOutputs/outputs.csv")
 
-# main()
+main()

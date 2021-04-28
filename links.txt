@@ -29,3 +29,10 @@ https://www.programmersought.com/article/29995701537/
 batchnormalize weird behaviur with adam optimizer:
 https://github.com/kwotsin/transfer_learning_tutorial/blob/master/README.md
 
+problems related to previous checkpoint existance:
+https://github.com/kwotsin/transfer_learning_tutorial/issues/2
+
+create virtual env to run old code:
+https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc
+https://gist.github.com/frfahim/73c0fad6350332cef7a653bcd762f08d
+

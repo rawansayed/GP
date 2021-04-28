@@ -1,4 +1,5 @@
 import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 import tflearn
 from tflearn.layers.core import input_data
 from tflearn.layers.conv import conv_2d
@@ -14,27 +15,6 @@ batch_size=256
 
 from autoEncoder import create_auto_encoder
 
-
-# file_path = './paper_data-classification/paper_data/ontar/hct116_hart.episgt'
-# # file_path = './examples/eg_cls_on_target.episgt'
-# input_data = Episgt(file_path, num_epi_features=4, with_y=True)
-# x, y = input_data.get_dataset()
-# X = np.expand_dims(x, axis=2)
-# np.save("file.npy",X)
-# np.save()
-#######################################################################################################
-
-# tf.reset_default_graph()
-# auto_encoder = create_auto_encoder()
-# auto_encoder.load("./TrainingAutoEncoder/autoencoder/model.tfl")
-
-# array_of_weights_conv =[]
-
-# array_of_weights_BN =[]
-# tf222= tf.get_default_graph()
-
-# encoder_channel_size = [23, 32, 64, 64, 256, 256]
-
 def get_all_tensor_names(filename):
     l=[i.name for i in tf.get_default_graph().get_operations()]
     # l = [tensor.name for tensor in tf.get_default_graph().as_graph_def().node]
@@ -42,15 +22,36 @@ def get_all_tensor_names(filename):
     np.savetxt(a_file, l, delimiter=',', fmt='%s')
     a_file.close()
 
-# # get_all_tensor_names()
-# get_all_tensor_names("test.txt")
 
-# for i in range(len(encoder_channel_size)):
-#     array_of_weights_conv.append( tf.get_default_graph().get_tensor_by_name(f"convEncoder_{i}/Conv2D:0").W)
-#     # array_of_weights_BN.append(   tf.get_default_graph().get_tensor_by_name(f"BatchNormalizeEncoder_{i}/cond/Identity_1:0").W)
+# file_path = './paper_data-classification/paper_data/ontar/hct116_hart.episgt'
+# # file_path = './examples/eg_cls_on_target.episgt'
+# input_data = Episgt(file_path, num_epi_features=4, with_y=True)
+# x, y = input_data.get_dataset()
+# X = np.expand_dims(x, axis=2)
+# np.save("inputs.npy",X)
+# np.save("labels.npy",y)
+#######################################################################################################
 
-# from tensorflow.python.tools import inspect_checkpoint as chkp
-# chkp.print_tensors_in_checkpoint_file("./TrainingAutoEncoder/autoencoder/model.tfl", tensor_name=None, all_tensors=True)
+tf.reset_default_graph()
+auto_encoder = create_auto_encoder()
+auto_encoder.load("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl")
+
+array_of_weights_conv =[]
+array_of_weights_BN =[]
+tf222= tf.get_default_graph()
+
+encoder_channel_size = [23, 32, 64, 64, 256, 256]
+
+
+# get_all_tensor_names()
+get_all_tensor_names("./testFiles/testEncoder.txt")
+
+for i in range(len(encoder_channel_size)):
+    array_of_weights_conv.append( tf.get_default_graph().get_tensor_by_name(f"convEncoder_{i}/Conv2D:0").W)
+    # array_of_weights_BN.append(   tf.get_default_graph().get_tensor_by_name(f"BatchNormalizeEncoder_{i}/cond/Identity_1:0").W)
+
+from tensorflow.python.tools import inspect_checkpoint as chkp
+chkp.print_tensors_in_checkpoint_file("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl", tensor_name=None, all_tensors=True)
 
 
 
@@ -136,10 +137,10 @@ AE = regression(AE, optimizer='adam', learning_rate=0.0001
 
 # Training the network
 model = tflearn.DNN(AE,tensorboard_verbose=0,
-tensorboard_dir = './TrainingAutoEncoder/classification/AE',
-checkpoint_path = './TrainingAutoEncoder/classification/AE/checkpoint')
+tensorboard_dir = './TrainingOutputs/classification/AE',
+checkpoint_path = './TrainingOutputs/classification/AE/checkpoint')
 
-get_all_tensor_names("lol.txt")
+get_all_tensor_names("./testFiles/testCls.txt")
 
 # weight saving and loading resources
 # Keywords:
@@ -150,7 +151,8 @@ get_all_tensor_names("lol.txt")
 # Process:
 # extract weights from layer as numpy array
 # Either initialize or dynamically assign weights to new layers
-model.load("./TrainingAutoEncoder/autoencoder/model.tfl",weights_only=True)
+
+# model.load("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl",weights_only=True)
 
 # encoder_channel_size = [23, 32, 64, 64, 256, 256]
 # for i in range(len(encoder_channel_size)):
@@ -165,4 +167,6 @@ model.fit({'input': X}, {'target': Y}, n_epoch=25,batch_size=batch_size,
 validation_set=({'input': X_test}, {'target': Y_test}),
 snapshot_step=1000,show_metric=True, run_id='convnet_mnist')
 
-model.save("./TrainingAutoEncoder/classification/ClassificationModel.tfl")
+model.save("./TrainingOutputs/classification/ClassificationModel.tfl")
+
+

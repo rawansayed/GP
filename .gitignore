@@ -8,3 +8,5 @@ results
 dist
 *.egg-info
 AE
+venv
+testFiles
