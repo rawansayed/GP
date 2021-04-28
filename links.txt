@@ -1,0 +1,31 @@
+https://stackoverflow.com/questions/39555256/tensorflow-how-can-i-assign-numpy-pre-trained-weights-to-subsections-of-graph
+https://stackoverflow.com/questions/49499423/save-and-restor-tensorflow-model-with-numpy-weights
+
+
+save names of nn operations
+https://stackoverflow.com/questions/42685994/how-to-get-a-tensorflow-op-by-name
+https://www.kite.com/python/answers/how-to-save-a-numpy-array-to-a-text-file-in-python
+https://stackoverflow.com/questions/48230230/typeerror-mismatch-between-array-dtype-object-and-format-specifier-18e/48231106
+https://stackoverflow.com/questions/50399782/python-numpy-valueerror-expected-1d-or-2d-array-got-0d-array-instead
+
+get tensor by its name:
+https://stackoverflow.com/questions/36612512/tensorflow-how-to-get-a-tensor-by-name
+
+conv2d and batchnormalization needs special treatment:
+https://stackoverflow.com/questions/49166819/keyerror-the-tensor-variable-refer-to-the-tensor-which-does-not-exists
+
+doc:
+http://tflearn.org/getting_started/#data-management
+http://tflearn.org/models/generator/
+
+examples:
+https://github.com/tflearn/tflearn/blob/master/examples/basics/weights_persistence.py
+https://ahmethamzaemra.github.io/2018/01/16/What-is-transfer-learning.html
+https://github.com/tflearn/tflearn/blob/master/examples/basics/finetuning.py
+
+solving batchnormalization implementation problem:
+https://www.programmersought.com/article/29995701537/
+
+batchnormalize weird behaviur with adam optimizer:
+https://github.com/kwotsin/transfer_learning_tutorial/blob/master/README.md
+
