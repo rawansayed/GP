@@ -13,7 +13,7 @@ import numpy as np
 batch_size=256
 
 
-# file_path = './paper_data-classification/paper_data/ontar/hct116_hart.episgt'
+# file_path = './database/paper_data-classification/paper_data/ontar/hct116_hart.episgt'
 # # file_path = './examples/eg_cls_on_target.episgt'
 # input_data = Episgt(file_path, num_epi_features=4, with_y=True)
 # x, y = input_data.get_dataset()
@@ -29,16 +29,24 @@ def create_auto_encoder():
     betas =  [tf.Variable(0.0 * tf.ones(channel_size[i]), name=f'beta_{i}') for i in range(len(channel_size))]
     # print(betas[0])
 
+    encoder_channel_size= [23, 32, 64, 64, 256, 256]
     AE = input_data(shape=[None,8, 1, 23], name='input')
-    for i in range(len(channel_size)):
-        AE = conv_2d(AE,channel_size[i], [1, 3],bias=False,activation=None,name=f"convEncoder_{i}")
-        AE = batch_normalization(AE,decay=0,name=f"BatchNormalizeEncoder_{i}",trainable=False)#,trainable=False
+    for i in range(len(encoder_channel_size)):
+        AE = conv_2d(AE,encoder_channel_size[i], [1, 3],bias=False,activation=None,name=f"convEncoder_{i}")
+        AE = batch_normalization(AE,decay=0,name=f"BatchNormalizeEncoder_{i}")#,trainable=False
         # AE = AE + betas[i]
         # AE = relu(AE)
         AE=sigmoid(AE)
 
+    decoder_channel_size= [256, 256,64, 64, 32,23]
+    for i in range(len(decoder_channel_size)):
+        AE = conv_2d(AE,decoder_channel_size[i], [1, 3],bias=False,activation=None,name=f"convDecoder_{i}",restore=False)
+        AE = batch_normalization(AE,decay=0,name=f"BatchNormalizeDecoder_{i}",restore=False)#,trainable=False
+        # AE = AE + betas[i]
+        # AE = relu(AE)
+        AE=sigmoid(AE)
 
-    AE = regression(AE, optimizer='adam', learning_rate=0.0001, loss='categorical_crossentropy', name='target')
+    AE = regression(AE, optimizer='adam', learning_rate=0.0001, loss='categorical_crossentropy', name='target',restore=False)
 
 
     # Training the network
@@ -58,10 +66,10 @@ def main():
     # print(X[0],len(X),len(X[0]),len(X[0][0]))
 
     X, X_test, Y, Y_test = train_test_split(X, X, test_size=0.33, random_state=42)
-    print(X.shape)
-    print(X_test.shape)
-    print(Y.shape)
-    print(Y_test.shape)
+    # print(X.shape)
+    # print(X_test.shape)
+    # print(Y.shape)
+    # print(Y_test.shape)
     # print(len(X),len(X[0]),len(X[0][0]),X.shape)
     # print(len(X_test),len(X_test[0]),len(X_test[0][0]),X_test.shape)
     # print(len(Y),len(Y[0]),len(Y[0][0]),Y.shape)
@@ -77,13 +85,13 @@ def main():
 
     model.save("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl")
 
-    df=pd.DataFrame(X[0].reshape(8, 23))
-    df.to_csv("./TrainingOutputs/inputs.csv")
+    # df=pd.DataFrame(X[0].reshape(8, 23))
+    # df.to_csv("./TrainingOutputs/inputs.csv")
 
-    encode_decode = model.predict(X[0].reshape(1,8, 1, 23))
-    output=np.array(encode_decode)
-    output[:] = output[:]>0.5
-    df=pd.DataFrame(output.reshape(8, 23))
-    df.to_csv("./TrainingOutputs/outputs.csv")
+    # encode_decode = model.predict(X[0].reshape(1,8, 1, 23))
+    # output=np.array(encode_decode)
+    # output[:] = output[:]>0.5
+    # df=pd.DataFrame(output.reshape(8, 23))
+    # df.to_csv("./TrainingOutputs/outputs.csv")
 
-main()
+# main()

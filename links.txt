@@ -13,7 +13,6 @@ https://stackoverflow.com/questions/36612512/tensorflow-how-to-get-a-tensor-by-n
 
 conv2d and batchnormalization needs special treatment:
 https://stackoverflow.com/questions/49166819/keyerror-the-tensor-variable-refer-to-the-tensor-which-does-not-exists
-
 doc:
 http://tflearn.org/getting_started/#data-management
 http://tflearn.org/models/generator/
@@ -36,3 +35,7 @@ create virtual env to run old code:
 https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc
 https://gist.github.com/frfahim/73c0fad6350332cef7a653bcd762f08d
 
+
+usage:
+python3 autoEncoder.py >./testFiles/EncoderOutput.txt 2>./testFiles/EncoderError.txt
+python3 classification.py >./testFiles/ClsOutput.txt 2>./testFiles/ClsError.txt

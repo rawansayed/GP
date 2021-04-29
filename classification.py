@@ -22,40 +22,28 @@ def get_all_tensor_names(filename):
     np.savetxt(a_file, l, delimiter=',', fmt='%s')
     a_file.close()
 
-
-# file_path = './paper_data-classification/paper_data/ontar/hct116_hart.episgt'
-# # file_path = './examples/eg_cls_on_target.episgt'
-# input_data = Episgt(file_path, num_epi_features=4, with_y=True)
-# x, y = input_data.get_dataset()
-# X = np.expand_dims(x, axis=2)
-# np.save("inputs.npy",X)
-# np.save("labels.npy",y)
 #######################################################################################################
 
-tf.reset_default_graph()
-auto_encoder = create_auto_encoder()
-auto_encoder.load("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl")
+# tf.reset_default_graph()
+# auto_encoder = create_auto_encoder()
+# auto_encoder.load("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl",weights_only=True)
 
-array_of_weights_conv =[]
-array_of_weights_BN =[]
-tf222= tf.get_default_graph()
-
-encoder_channel_size = [23, 32, 64, 64, 256, 256]
+# tf222= tf.get_default_graph()
 
 
-# get_all_tensor_names()
-get_all_tensor_names("./testFiles/testEncoder.txt")
+# get_all_tensor_names in side the model
+# get_all_tensor_names("./testFiles/testEncoder.txt")
 
-for i in range(len(encoder_channel_size)):
-    array_of_weights_conv.append( tf.get_default_graph().get_tensor_by_name(f"convEncoder_{i}/Conv2D:0").W)
-    # array_of_weights_BN.append(   tf.get_default_graph().get_tensor_by_name(f"BatchNormalizeEncoder_{i}/cond/Identity_1:0").W)
+###### to get cerain tensor using name
+# array_of_weights_conv =[]
+# array_of_weights_BN =[]
+# for i in range(len(encoder_channel_size)):
+#     array_of_weights_conv.append( tf.get_default_graph().get_tensor_by_name(f"convEncoder_{i}/Conv2D:0").W)
+#     array_of_weights_BN.append(   tf.get_default_graph().get_tensor_by_name(f"BatchNormalizeEncoder_{i}/cond/Identity_1:0").W)
 
-from tensorflow.python.tools import inspect_checkpoint as chkp
-chkp.print_tensors_in_checkpoint_file("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl", tensor_name=None, all_tensors=True)
-
-
-
-
+##### To debug tensors
+# from tensorflow.python.tools import inspect_checkpoint as chkp
+# chkp.print_tensors_in_checkpoint_file("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl", tensor_name=None, all_tensors=True)
 
 
 
@@ -64,8 +52,8 @@ chkp.print_tensors_in_checkpoint_file("./TrainingOutputs/autoencoder/autoencoder
 tf.reset_default_graph()
 X=np.load("inputs.npy")
 y=np.load("labels.npy")
-print(X.shape)
-print(y.shape)
+# print(X.shape)
+# print(y.shape)
 # print(X[0],len(X),len(X[0]),len(X[0][0]))
 X=X.reshape([-1,8, 1, 23])
 y=y.reshape([-1,1, 1, 1])
@@ -74,12 +62,12 @@ y=y.reshape([-1,1, 1, 1])
 
 
 X, X_test, Y, Y_test = train_test_split(X, y, test_size=0.33, random_state=42)
-print(X.shape)
-print(X_test.shape)
+# print(X.shape)
+# print(X_test.shape)
 Y=Y.reshape([-1,])
-print(Y.shape)
+# print(Y.shape)
 Y_test=Y_test.reshape([-1,]) 
-print(Y_test.shape)
+# print(Y_test.shape)
 # print(len(X),len(X[0]),len(X[0][0]),X.shape)
 # print(len(X_test),len(X_test[0]),len(X_test[0][0]),X_test.shape)
 # print(len(Y),len(Y[0]),len(Y[0][0]),Y.shape)
@@ -106,11 +94,14 @@ for i in range(len(encoder_channel_size)):
 cls_channel_size = [512, 512, 1024,2]
 for i in range(len(cls_channel_size)-1):
     if i==0:
-        AE = conv_2d(AE,cls_channel_size[i], [1, 3], strides=2,bias=False,activation=None,name=f"convCls_{i}",restore=False)
+        continue
+        # AE = conv_2d(AE,cls_channel_size[i], [1, 3], strides=2,bias=False,activation=None,name=f"convCls_{i}",restore=False)
     if i==1:
-        AE = conv_2d(AE,cls_channel_size[i], [1, 3],bias=False,activation=None,name=f"convCls_{i}",restore=False)
+        continue
+        # AE = conv_2d(AE,cls_channel_size[i], [1, 3],bias=False,activation=None,name=f"convCls_{i}",restore=False)
     if i==2:
-        AE = conv_2d(AE,cls_channel_size[i], [1, 3],bias=False,activation=None,name=f"convCls_{i}",restore=False)#,padding='VALID'
+        continue
+        # AE = conv_2d(AE,cls_channel_size[i], [1, 3],bias=False,activation=None,name=f"convCls_{i}",restore=False)#,padding='VALID'
     AE = batch_normalization(AE,decay=0.99,name=f"BatchNormalizeCls_{i}",restore=False)
     # AE = AE + betas[i]
     # AE = relu(AE)
@@ -128,7 +119,7 @@ print(AE.shape)
 
 AE = tf.squeeze(AE, axis=[1, 2])[:, 1]
 
-print(AE.shape)
+# print(AE.shape)
 # AE = tf.squeeze(AE, axis=[1, 2])[:, 1]
 
 AE = regression(AE, optimizer='adam', learning_rate=0.0001
@@ -152,7 +143,7 @@ get_all_tensor_names("./testFiles/testCls.txt")
 # extract weights from layer as numpy array
 # Either initialize or dynamically assign weights to new layers
 
-# model.load("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl",weights_only=True)
+model.load("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl",weights_only=True)
 
 # encoder_channel_size = [23, 32, 64, 64, 256, 256]
 # for i in range(len(encoder_channel_size)):
@@ -167,6 +158,6 @@ model.fit({'input': X}, {'target': Y}, n_epoch=25,batch_size=batch_size,
 validation_set=({'input': X_test}, {'target': Y_test}),
 snapshot_step=1000,show_metric=True, run_id='convnet_mnist')
 
-model.save("./TrainingOutputs/classification/ClassificationModel.tfl")
+model.save("./TrainingOutputs/classification/clsModel/ClassificationModel.tfl")
 
 
