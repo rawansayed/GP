@@ -24,27 +24,408 @@ def get_all_tensor_names(filename):
 
 #######################################################################################################
 
-# tf.reset_default_graph()
-# auto_encoder = create_auto_encoder()
-# auto_encoder.load("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl",weights_only=True)
+tf.reset_default_graph()
+auto_encoder = create_auto_encoder()
+auto_encoder.load("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl",weights_only=True)
 
-# tf222= tf.get_default_graph()
+tf222= tf.get_default_graph()
 
 
-# get_all_tensor_names in side the model
+# # get_all_tensor_names in side the model
 # get_all_tensor_names("./testFiles/testEncoder.txt")
 
-###### to get cerain tensor using name
-# array_of_weights_conv =[]
-# array_of_weights_BN =[]
-# for i in range(len(encoder_channel_size)):
-#     array_of_weights_conv.append( tf.get_default_graph().get_tensor_by_name(f"convEncoder_{i}/Conv2D:0").W)
-#     array_of_weights_BN.append(   tf.get_default_graph().get_tensor_by_name(f"BatchNormalizeEncoder_{i}/cond/Identity_1:0").W)
+# ##### to get cerain tensor using name
+# encoder_channel_size = [23, 32, 64, 64, 256, 256]
+
+# array_of_tensors=[]
+# array_of_weights=[]
+# for layerNum in range(len(encoder_channel_size)):
+#     variables_to_Be_restored=[
+#         f"convEncoder_{layerNum}/W/Initializer/random_uniform/shape:0",
+#         f"convEncoder_{layerNum}/W/Initializer/random_uniform/min:0",
+#         f"convEncoder_{layerNum}/W/Initializer/random_uniform/max:0",
+#         f"convEncoder_{layerNum}/W/Initializer/random_uniform/RandomUniform:0",
+#         f"convEncoder_{layerNum}/W/Initializer/random_uniform/sub:0",
+#         f"convEncoder_{layerNum}/W/Initializer/random_uniform/mul:0",
+#         f"convEncoder_{layerNum}/W/Initializer/random_uniform:0",
+#         f"convEncoder_{layerNum}/W:0",
+#         # f"convEncoder_{layerNum}/W/Assign:0",
+#         f"convEncoder_{layerNum}/W/read:0",
+#         f"convEncoder_{layerNum}/Conv2D:0",
+#         f"BatchNormalizeEncoder_{layerNum}/beta/Initializer/Const:0",
+#         f"BatchNormalizeEncoder_{layerNum}/beta:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/beta/Assign:0",
+#         f"BatchNormalizeEncoder_{layerNum}/beta/read:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/shape:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/mean:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/stddev:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/RandomStandardNormal:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/mul:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/gamma/Assign:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma/read:0",
+#         f"BatchNormalizeEncoder_{layerNum}/moving_mean/Initializer/zeros:0",
+#         f"BatchNormalizeEncoder_{layerNum}/moving_mean:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/moving_mean/Assign:0",
+#         f"BatchNormalizeEncoder_{layerNum}/moving_mean/read:0",
+#         f"BatchNormalizeEncoder_{layerNum}/moving_variance/Initializer/Const:0",
+#         f"BatchNormalizeEncoder_{layerNum}/moving_variance:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/moving_variance/Assign:0",
+#         f"BatchNormalizeEncoder_{layerNum}/moving_variance/read:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/is_training/Initializer/Const:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/is_training:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/is_training/Assign:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/is_training/read:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/Assign/value:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/Assign:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/Assign_1/value:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/Assign_1:0",
+#         f"BatchNormalizeEncoder_{layerNum}/cond/Switch:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/switch_t:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/switch_f:0",
+#         f"BatchNormalizeEncoder_{layerNum}/cond/pred_id:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean/reduction_indices:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean/Switch:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/StopGradient:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/SquaredDifference:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/variance/reduction_indices:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/variance:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/Squeeze:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/Squeeze_1:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/decay:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/sub:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/sub/Switch:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/mul:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/Switch:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/decay:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/sub:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/sub/Switch:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/mul:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/Switch:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/Identity:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/Identity_1:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/Switch_1:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/Switch_2:0",
+#         f"BatchNormalizeEncoder_{layerNum}/cond/Merge:0",
+#         f"BatchNormalizeEncoder_{layerNum}/cond/Merge_1:0",
+#         f"BatchNormalizeEncoder_{layerNum}/batchnorm/add/y:0",
+#         f"BatchNormalizeEncoder_{layerNum}/batchnorm/add:0",
+#         f"BatchNormalizeEncoder_{layerNum}/batchnorm/Rsqrt:0",
+#         f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul_1:0",
+#         f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul_2:0",
+#         f"BatchNormalizeEncoder_{layerNum}/batchnorm/sub:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/batchnorm/add_1:0"
+#     ]
+#     if layerNum==0:
+#         variables_to_Be_restored=[
+#             f"convEncoder_{layerNum}/W/Initializer/random_uniform/shape:0",
+#             f"convEncoder_{layerNum}/W/Initializer/random_uniform/min:0",
+#             f"convEncoder_{layerNum}/W/Initializer/random_uniform/max:0",
+#             f"convEncoder_{layerNum}/W/Initializer/random_uniform/RandomUniform:0",
+#             f"convEncoder_{layerNum}/W/Initializer/random_uniform/sub:0",
+#             f"convEncoder_{layerNum}/W/Initializer/random_uniform/mul:0",
+#             f"convEncoder_{layerNum}/W/Initializer/random_uniform:0",
+#             f"convEncoder_{layerNum}/W:0",
+#             # f"convEncoder_{layerNum}/W/Assign:0",
+#             f"convEncoder_{layerNum}/W/read:0",
+#             f"convEncoder_{layerNum}/Conv2D:0",
+#             f"BatchNormalizeEncoder_{layerNum}/beta/Initializer/Const:0",
+#             f"BatchNormalizeEncoder_{layerNum}/beta:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/beta/Assign:0",
+#             f"BatchNormalizeEncoder_{layerNum}/beta/read:0",
+#             f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/shape:0",
+#             f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/mean:0",
+#             f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/stddev:0",
+#             f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/RandomStandardNormal:0",
+#             f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/mul:0",
+#             f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal:0",
+#             f"BatchNormalizeEncoder_{layerNum}/gamma:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/gamma/Assign:0",
+#             f"BatchNormalizeEncoder_{layerNum}/gamma/read:0",
+#             f"BatchNormalizeEncoder_{layerNum}/moving_mean/Initializer/zeros:0",
+#             f"BatchNormalizeEncoder_{layerNum}/moving_mean:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/moving_mean/Assign:0",
+#             f"BatchNormalizeEncoder_{layerNum}/moving_mean/read:0",
+#             f"BatchNormalizeEncoder_{layerNum}/moving_variance/Initializer/Const:0",
+#             f"BatchNormalizeEncoder_{layerNum}/moving_variance:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/moving_variance/Assign:0",
+#             f"BatchNormalizeEncoder_{layerNum}/moving_variance/read:0",
+#             f"BatchNormalizeEncoder_{layerNum}/is_training/Initializer/Const:0",
+#             f"BatchNormalizeEncoder_{layerNum}/is_training:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/is_training/Assign:0",
+#             f"BatchNormalizeEncoder_{layerNum}/is_training/read:0",
+#             f"BatchNormalizeEncoder_{layerNum}/Assign/value:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/Assign:0",
+#             f"BatchNormalizeEncoder_{layerNum}/Assign_1/value:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/Assign_1:0",
+#             f"BatchNormalizeEncoder_{layerNum}/cond/Switch:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/switch_t:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/switch_f:0",
+#             f"BatchNormalizeEncoder_{layerNum}/cond/pred_id:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean/reduction_indices:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean/Switch:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/moments/StopGradient:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/moments/SquaredDifference:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/moments/variance/reduction_indices:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/moments/variance:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/moments/Squeeze:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/moments/Squeeze_1:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/decay:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/sub:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/sub/Switch:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/mul:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/Switch:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/decay:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/sub:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/sub/Switch:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/mul:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/Switch:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/Identity:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/Identity_1:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/Switch_1:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/cond/Switch_2:0",
+#             f"BatchNormalizeEncoder_{layerNum}/cond/Merge:0",
+#             f"BatchNormalizeEncoder_{layerNum}/cond/Merge_1:0",
+#             f"BatchNormalizeEncoder_{layerNum}/batchnorm/add/y:0",
+#             f"BatchNormalizeEncoder_{layerNum}/batchnorm/add:0",
+#             f"BatchNormalizeEncoder_{layerNum}/batchnorm/Rsqrt:0",
+#             f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul_1:0",
+#             f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul_2:0",
+#             f"BatchNormalizeEncoder_{layerNum}/batchnorm/sub:0",
+#             # f"BatchNormalizeEncoder_{layerNum}/batchnorm/add_1:0"
+#         ]
+#     for variable in variables_to_Be_restored:
+#         # print(layerNum,variable,len(variables_to_Be_restored))
+#         try:
+#             array_of_tensors.append(
+#                 tf.Variable(
+#                     tf.get_default_graph().get_tensor_by_name(
+#                         variable)))
+#         except:
+#             array_of_weights.append(
+#                 tf.Variable(
+#                     tf.get_default_graph().get_tensor_by_name(
+#                         variable).W))
+
+#     for variable in variables_to_Be_restored:
+#         i=0
+#         j=0
+#         print(layerNum,variable,len(variables_to_Be_restored))
+#         try:
+#             auto_encoder.set_weights(
+#                 tf.get_default_graph().get_tensor_by_name(variable)
+#                 , array_of_tensors[i] )
+#             i+=1
+#         except:
+#             auto_encoder.set_weights(
+#                 tf.get_default_graph().get_tensor_by_name(variable)
+#                 , array_of_weights[j])
+#             j+=1
+            
+        # auto_encoder.set_weights(
+        #     tf.get_default_graph().get_tensor_by_name(variable)
+        #     , array_of_weights_in_all_layers[
+        #         (layerNum+1)*variables_to_Be_restored.index(variable)])
+
+
 
 ##### To debug tensors
 # from tensorflow.python.tools import inspect_checkpoint as chkp
 # chkp.print_tensors_in_checkpoint_file("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl", tensor_name=None, all_tensors=True)
 
+
+##### to get cerain tensor using name
+encoder_channel_size = [23, 32, 64, 64, 256, 256]
+
+array_of_tensors=[]
+array_of_weights=[]
+for layerNum in range(len(encoder_channel_size)):
+    variables_to_Be_restored=[
+        # f"convEncoder_{layerNum}/W/Initializer/random_uniform/shape:0",
+        # f"convEncoder_{layerNum}/W/Initializer/random_uniform/min:0",
+        # f"convEncoder_{layerNum}/W/Initializer/random_uniform/max:0",
+        # f"convEncoder_{layerNum}/W/Initializer/random_uniform/RandomUniform:0",
+        # f"convEncoder_{layerNum}/W/Initializer/random_uniform/sub:0",
+        # f"convEncoder_{layerNum}/W/Initializer/random_uniform/mul:0",
+        # f"convEncoder_{layerNum}/W/Initializer/random_uniform:0",
+        # f"convEncoder_{layerNum}/W:0",
+        # f"convEncoder_{layerNum}/W/Assign:0",
+        # f"convEncoder_{layerNum}/W/read:0",
+        f"convEncoder_{layerNum}/Conv2D:0",
+        # f"BatchNormalizeEncoder_{layerNum}/beta/Initializer/Const:0",
+        # f"BatchNormalizeEncoder_{layerNum}/beta:0",
+        # f"BatchNormalizeEncoder_{layerNum}/beta/Assign:0",
+        # f"BatchNormalizeEncoder_{layerNum}/beta/read:0",
+        # f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/shape:0",
+        # f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/mean:0",
+        # f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/stddev:0",
+        # f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/RandomStandardNormal:0",
+        # f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/mul:0",
+        # f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal:0",
+        # f"BatchNormalizeEncoder_{layerNum}/gamma:0",
+        # f"BatchNormalizeEncoder_{layerNum}/gamma/Assign:0",
+        # f"BatchNormalizeEncoder_{layerNum}/gamma/read:0",
+        # f"BatchNormalizeEncoder_{layerNum}/moving_mean/Initializer/zeros:0",
+        # f"BatchNormalizeEncoder_{layerNum}/moving_mean:0",
+        # f"BatchNormalizeEncoder_{layerNum}/moving_mean/Assign:0",
+        # f"BatchNormalizeEncoder_{layerNum}/moving_mean/read:0",
+        # f"BatchNormalizeEncoder_{layerNum}/moving_variance/Initializer/Const:0",
+        # f"BatchNormalizeEncoder_{layerNum}/moving_variance:0",
+        # f"BatchNormalizeEncoder_{layerNum}/moving_variance/Assign:0",
+        # f"BatchNormalizeEncoder_{layerNum}/moving_variance/read:0",
+        # f"BatchNormalizeEncoder_{layerNum}/is_training/Initializer/Const:0",
+        # f"BatchNormalizeEncoder_{layerNum}/is_training:0",
+        # f"BatchNormalizeEncoder_{layerNum}/is_training/Assign:0",
+        # f"BatchNormalizeEncoder_{layerNum}/is_training/read:0",
+        # f"BatchNormalizeEncoder_{layerNum}/Assign/value:0",
+        # f"BatchNormalizeEncoder_{layerNum}/Assign:0",
+        # f"BatchNormalizeEncoder_{layerNum}/Assign_1/value:0",
+        # f"BatchNormalizeEncoder_{layerNum}/Assign_1:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/Switch:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/switch_t:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/switch_f:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/pred_id:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean/reduction_indices:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean/Switch:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/moments/StopGradient:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/moments/SquaredDifference:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/moments/variance/reduction_indices:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/moments/variance:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/moments/Squeeze:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/moments/Squeeze_1:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/decay:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/sub:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/sub/Switch:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/mul:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/Switch:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/decay:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/sub:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/sub/Switch:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/mul:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/Switch:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/Identity:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/Identity_1:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/Switch_1:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/Switch_2:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/Merge:0",
+        # f"BatchNormalizeEncoder_{layerNum}/cond/Merge_1:0",
+        # f"BatchNormalizeEncoder_{layerNum}/batchnorm/add/y:0",
+        # f"BatchNormalizeEncoder_{layerNum}/batchnorm/add:0",
+        # f"BatchNormalizeEncoder_{layerNum}/batchnorm/Rsqrt:0",
+        # f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul:0",
+        # f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul_1:0",
+        # f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul_2:0",
+        # f"BatchNormalizeEncoder_{layerNum}/batchnorm/sub:0",
+        # f"BatchNormalizeEncoder_{layerNum}/batchnorm/add_1:0"
+    ]
+    if layerNum==0:
+        variables_to_Be_restored=[
+            # f"convEncoder_{layerNum}/W/Initializer/random_uniform/shape:0",
+            # f"convEncoder_{layerNum}/W/Initializer/random_uniform/min:0",
+            # f"convEncoder_{layerNum}/W/Initializer/random_uniform/max:0",
+            # f"convEncoder_{layerNum}/W/Initializer/random_uniform/RandomUniform:0",
+            # f"convEncoder_{layerNum}/W/Initializer/random_uniform/sub:0",
+            # f"convEncoder_{layerNum}/W/Initializer/random_uniform/mul:0",
+            # f"convEncoder_{layerNum}/W/Initializer/random_uniform:0",
+            # f"convEncoder_{layerNum}/W:0",
+            # f"convEncoder_{layerNum}/W/Assign:0",
+            # f"convEncoder_{layerNum}/W/read:0",
+            f"convEncoder_{layerNum}/Conv2D:0",
+            # f"BatchNormalizeEncoder_{layerNum}/beta/Initializer/Const:0",
+            # f"BatchNormalizeEncoder_{layerNum}/beta:0",
+            # f"BatchNormalizeEncoder_{layerNum}/beta/Assign:0",
+            # f"BatchNormalizeEncoder_{layerNum}/beta/read:0",
+            # f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/shape:0",
+            # f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/mean:0",
+            # f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/stddev:0",
+            # f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/RandomStandardNormal:0",
+            # f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/mul:0",
+            # f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal:0",
+            # f"BatchNormalizeEncoder_{layerNum}/gamma:0",
+            # f"BatchNormalizeEncoder_{layerNum}/gamma/Assign:0",
+            # f"BatchNormalizeEncoder_{layerNum}/gamma/read:0",
+            # f"BatchNormalizeEncoder_{layerNum}/moving_mean/Initializer/zeros:0",
+            # f"BatchNormalizeEncoder_{layerNum}/moving_mean:0",
+            # f"BatchNormalizeEncoder_{layerNum}/moving_mean/Assign:0",
+            # f"BatchNormalizeEncoder_{layerNum}/moving_mean/read:0",
+            # f"BatchNormalizeEncoder_{layerNum}/moving_variance/Initializer/Const:0",
+            # f"BatchNormalizeEncoder_{layerNum}/moving_variance:0",
+            # f"BatchNormalizeEncoder_{layerNum}/moving_variance/Assign:0",
+            # f"BatchNormalizeEncoder_{layerNum}/moving_variance/read:0",
+            # f"BatchNormalizeEncoder_{layerNum}/is_training/Initializer/Const:0",
+            # f"BatchNormalizeEncoder_{layerNum}/is_training:0",
+            # f"BatchNormalizeEncoder_{layerNum}/is_training/Assign:0",
+            # f"BatchNormalizeEncoder_{layerNum}/is_training/read:0",
+            # f"BatchNormalizeEncoder_{layerNum}/Assign/value:0",
+            # f"BatchNormalizeEncoder_{layerNum}/Assign:0",
+            # f"BatchNormalizeEncoder_{layerNum}/Assign_1/value:0",
+            # f"BatchNormalizeEncoder_{layerNum}/Assign_1:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/Switch:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/switch_t:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/switch_f:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/pred_id:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean/reduction_indices:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean/Switch:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/moments/StopGradient:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/moments/SquaredDifference:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/moments/variance/reduction_indices:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/moments/variance:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/moments/Squeeze:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/moments/Squeeze_1:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/decay:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/sub:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/sub/Switch:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/mul:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/Switch:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/decay:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/sub:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/sub/Switch:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/mul:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/Switch:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/Identity:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/Identity_1:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/Switch_1:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/Switch_2:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/Merge:0",
+            # f"BatchNormalizeEncoder_{layerNum}/cond/Merge_1:0",
+            # f"BatchNormalizeEncoder_{layerNum}/batchnorm/add/y:0",
+            # f"BatchNormalizeEncoder_{layerNum}/batchnorm/add:0",
+            # f"BatchNormalizeEncoder_{layerNum}/batchnorm/Rsqrt:0",
+            # f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul:0",
+            # f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul_1:0",
+            # f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul_2:0",
+            # f"BatchNormalizeEncoder_{layerNum}/batchnorm/sub:0",
+            # f"BatchNormalizeEncoder_{layerNum}/batchnorm/add_1:0",
+            # "Sigmoid:0"
+        ]
+    for variable in variables_to_Be_restored:
+        print(layerNum,variable,len(variables_to_Be_restored))
+        array_of_weights.append(
+                tf.Variable(
+                    tf.get_default_graph().get_tensor_by_name(
+                        variable).W))
+
+    # for variable in variables_to_Be_restored:
+    #     j=0
+    #     auto_encoder.set_weights(
+    #         tf.get_default_graph().get_tensor_by_name(variable)
+    #         , array_of_weights[j])
+    #     j+=1
 
 
 
@@ -59,8 +440,8 @@ X=X.reshape([-1,8, 1, 23])
 y=y.reshape([-1,1, 1, 1])
 
 # print(X[0],len(X),len(X[0]),len(X[0][0]))
-
-
+# for i in range(36*6):
+#     print(array_of_weights_in_all_layers[i])
 X, X_test, Y, Y_test = train_test_split(X, y, test_size=0.33, random_state=42)
 # print(X.shape)
 # print(X_test.shape)
@@ -91,17 +472,19 @@ for i in range(len(encoder_channel_size)):
     # AE = AE + betas[i]
     # AE = relu(AE)
 
+
+
 cls_channel_size = [512, 512, 1024,2]
 for i in range(len(cls_channel_size)-1):
     if i==0:
-        continue
-        # AE = conv_2d(AE,cls_channel_size[i], [1, 3], strides=2,bias=False,activation=None,name=f"convCls_{i}",restore=False)
+        
+        AE = conv_2d(AE,cls_channel_size[i], [1, 3], strides=2,bias=False,activation=None,name=f"convCls_{i}",restore=False)
     if i==1:
-        continue
-        # AE = conv_2d(AE,cls_channel_size[i], [1, 3],bias=False,activation=None,name=f"convCls_{i}",restore=False)
+        
+        AE = conv_2d(AE,cls_channel_size[i], [1, 3],bias=False,activation=None,name=f"convCls_{i}",restore=False)
     if i==2:
-        continue
-        # AE = conv_2d(AE,cls_channel_size[i], [1, 3],bias=False,activation=None,name=f"convCls_{i}",restore=False)#,padding='VALID'
+        
+        AE = conv_2d(AE,cls_channel_size[i], [1, 3],bias=False,activation=None,name=f"convCls_{i}",restore=False)#,padding='VALID'
     AE = batch_normalization(AE,decay=0.99,name=f"BatchNormalizeCls_{i}",restore=False)
     # AE = AE + betas[i]
     # AE = relu(AE)
@@ -133,24 +516,114 @@ checkpoint_path = './TrainingOutputs/classification/AE/checkpoint')
 
 get_all_tensor_names("./testFiles/testCls.txt")
 
-# weight saving and loading resources
-# Keywords:
+
 # dynamically assign weights to a layer
 # initialize layer weights from a numpy array
 # how to write a layer initializer function in tensorflow
 # what is a feed_dict in tensorflow
+
 # Process:
 # extract weights from layer as numpy array
 # Either initialize or dynamically assign weights to new layers
 
-model.load("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl",weights_only=True)
+# model.load("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl",weights_only=True)
 
 # encoder_channel_size = [23, 32, 64, 64, 256, 256]
-# for i in range(len(encoder_channel_size)):
-#     model.set_weights(tf.get_default_graph().get_tensor_by_name(f"convEncoder_{i}:0").W
-#     , array_of_weights_conv[i])
-#     model.set_weights(tf.get_default_graph().get_tensor_by_name(f"BatchNormalizeEncoder_{i}:0").W
-#     , array_of_weights_BN[i])
+# for layerNum in range(len(encoder_channel_size)):
+#     variables_to_Be_restored=[
+#         f"convEncoder_{layerNum}/W/Initializer/random_uniform/shape:0",
+#         f"convEncoder_{layerNum}/W/Initializer/random_uniform/min:0",
+#         f"convEncoder_{layerNum}/W/Initializer/random_uniform/max:0",
+#         f"convEncoder_{layerNum}/W/Initializer/random_uniform/RandomUniform:0",
+#         f"convEncoder_{layerNum}/W/Initializer/random_uniform/sub:0",
+#         f"convEncoder_{layerNum}/W/Initializer/random_uniform/mul:0",
+#         f"convEncoder_{layerNum}/W/Initializer/random_uniform:0",
+#         f"convEncoder_{layerNum}/W:0",
+#         # f"convEncoder_{layerNum}/W/Assign:0",
+#         f"convEncoder_{layerNum}/W/read:0",
+#         # f"convEncoder_{layerNum}/Conv2D:0",
+#         f"BatchNormalizeEncoder_{layerNum}/beta/Initializer/Const:0",
+#         f"BatchNormalizeEncoder_{layerNum}/beta:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/beta/Assign:0",
+#         f"BatchNormalizeEncoder_{layerNum}/beta/read:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/shape:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/mean:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/stddev:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/RandomStandardNormal:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal/mul:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma/Initializer/random_normal:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/gamma/Assign:0",
+#         f"BatchNormalizeEncoder_{layerNum}/gamma/read:0",
+#         f"BatchNormalizeEncoder_{layerNum}/moving_mean/Initializer/zeros:0",
+#         f"BatchNormalizeEncoder_{layerNum}/moving_mean:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/moving_mean/Assign:0",
+#         f"BatchNormalizeEncoder_{layerNum}/moving_mean/read:0",
+#         f"BatchNormalizeEncoder_{layerNum}/moving_variance/Initializer/Const:0",
+#         f"BatchNormalizeEncoder_{layerNum}/moving_variance:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/moving_variance/Assign:0",
+#         f"BatchNormalizeEncoder_{layerNum}/moving_variance/read:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/is_training/Initializer/Const:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/is_training:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/is_training/Assign:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/is_training/read:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/Assign/value:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/Assign:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/Assign_1/value:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/Assign_1:0",
+#         f"BatchNormalizeEncoder_{layerNum}/cond/Switch:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/switch_t:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/switch_f:0",
+#         f"BatchNormalizeEncoder_{layerNum}/cond/pred_id:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean/reduction_indices:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/mean/Switch:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/StopGradient:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/SquaredDifference:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/variance/reduction_indices:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/variance:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/Squeeze:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/moments/Squeeze_1:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/decay:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/sub:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/sub/Switch:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/mul:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg/Switch:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/decay:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/sub:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/sub/Switch:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/mul:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/AssignMovingAvg_1/Switch:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/Identity:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/Identity_1:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/Switch_1:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/cond/Switch_2:0",
+#         f"BatchNormalizeEncoder_{layerNum}/cond/Merge:0",
+#         f"BatchNormalizeEncoder_{layerNum}/cond/Merge_1:0",
+#         f"BatchNormalizeEncoder_{layerNum}/batchnorm/add/y:0",
+#         f"BatchNormalizeEncoder_{layerNum}/batchnorm/add:0",
+#         f"BatchNormalizeEncoder_{layerNum}/batchnorm/Rsqrt:0",
+#         f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul_1:0",
+#         f"BatchNormalizeEncoder_{layerNum}/batchnorm/mul_2:0",
+#         f"BatchNormalizeEncoder_{layerNum}/batchnorm/sub:0",
+#         # f"BatchNormalizeEncoder_{layerNum}/batchnorm/add_1:0"
+#     ]
+#     for variable in variables_to_Be_restored:
+#         model.set_weights(
+#             tf.get_default_graph().get_tensor_by_name(variable)
+#             , array_of_weights_in_all_layers[
+#                 (layerNum+1)*variables_to_Be_restored.index(variable)])
+
+for variable in variables_to_Be_restored:
+    print(layerNum,variable,len(variables_to_Be_restored))
+    j=0
+    auto_encoder.set_weights(
+        tf.get_default_graph().get_tensor_by_name(variable)
+        , array_of_weights[j])
+    j+=1
 
 
 

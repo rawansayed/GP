@@ -35,6 +35,12 @@ create virtual env to run old code:
 https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc
 https://gist.github.com/frfahim/73c0fad6350332cef7a653bcd762f08d
 
+how to make copies of tensor:
+https://stackoverflow.com/questions/33717772/how-can-i-copy-a-variable-in-tensorflow
+
+Assigning Problems:
+https://stackoverflow.com/questions/44755413/tensorflow-assign-value-to-variable
+https://github.com/tensorflow/tensorflow/issues/41914
 
 usage:
 python3 autoEncoder.py >./testFiles/EncoderOutput.txt 2>./testFiles/EncoderError.txt

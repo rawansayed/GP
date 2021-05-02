@@ -11,7 +11,7 @@ from tflearn.layers.estimator import regression
 import pandas as pd 
 import numpy as np
 batch_size=256
-
+# import sonnet as snt
 
 # file_path = './database/paper_data-classification/paper_data/ontar/hct116_hart.episgt'
 # # file_path = './examples/eg_cls_on_target.episgt'
@@ -32,7 +32,9 @@ def create_auto_encoder():
     encoder_channel_size= [23, 32, 64, 64, 256, 256]
     AE = input_data(shape=[None,8, 1, 23], name='input')
     for i in range(len(encoder_channel_size)):
+        # AE=snt.Conv2D(encoder_channel_size[i], [1, 3],name=f"convEncoder_{i}")(AE)
         AE = conv_2d(AE,encoder_channel_size[i], [1, 3],bias=False,activation=None,name=f"convEncoder_{i}")
+        # AE=snt.snt.BatchNorm(decay_rate=0, offset=False, name=f"BatchNormalizeEncoder_{i}")(AE, False, test_local_stats=False)
         AE = batch_normalization(AE,decay=0,name=f"BatchNormalizeEncoder_{i}")#,trainable=False
         # AE = AE + betas[i]
         # AE = relu(AE)
@@ -41,7 +43,9 @@ def create_auto_encoder():
     decoder_channel_size= [256, 256,64, 64, 32,23]
     for i in range(len(decoder_channel_size)):
         AE = conv_2d(AE,decoder_channel_size[i], [1, 3],bias=False,activation=None,name=f"convDecoder_{i}",restore=False)
+        # AE=snt.Conv2D(encoder_channel_size[i], [1, 3],name=f"convEncoder_{i}")(AE)
         AE = batch_normalization(AE,decay=0,name=f"BatchNormalizeDecoder_{i}",restore=False)#,trainable=False
+        # AE=snt.snt.BatchNorm(decay_rate=0, offset=False, name=f"BatchNormalizeEncoder_{i}")(AE, False, test_local_stats=False)
         # AE = AE + betas[i]
         # AE = relu(AE)
         AE=sigmoid(AE)
