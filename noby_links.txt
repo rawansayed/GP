@@ -42,6 +42,44 @@ Assigning Problems:
 https://stackoverflow.com/questions/44755413/tensorflow-assign-value-to-variable
 https://github.com/tensorflow/tensorflow/issues/41914
 
+Errors when loading weights from a fynction layer that don't have weights:
+ValueError: Input 'ref' passed float expected ref type while building NodeDef 'convEncoder_0/W/Assign_Variable_8' using Op<name=Assign; signature=ref:Ref(T), value:T -> output_ref:Ref(T); attr=T:type; attr=validate_shape:bool,default=true; attr=use_locking:bool,default=true; allows_uninitialized_input=true>
+Sol: only conv needed
+
+Errors when using pre made load fonction from tflearn:
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Assign requires shapes of both tensors to match. lhs shape= [512] rhs shape= [256] [[{{node save_2/Assign_6}}]]
+https://github.com/tensorflow/models/issues/1071
+https://stackoverflow.com/questions/40601975/tensorflow-assign-requires-shapes-of-both-tensors-to-match-lhs-shape-20-rhs
+
+
+trainable variable in tf:
+https://stackoverflow.com/questions/48460057/what-does-it-mean-that-a-tf-variable-is-trainable-in-tensorflow
+
+to get Weights of a layer tf:
+tf.variable.read_value
+https://www.tensorflow.org/versions/r1.15/api_docs/python/tf/Variable
+restore pretrained weights using tf1:
+https://stackoverflow.com/questions/50215301/tensorflow-how-to-use-pretrained-weights-in-new-graph
+https://www.tensorflow.org/api_docs/python/tf/compat/v1/assign
+https://stackoverflow.com/questions/39555256/tensorflow-how-can-i-assign-numpy-pre-trained-weights-to-subsections-of-graph
+https://stackoverflow.com/questions/36223157/set-weight-and-bias-tensors-of-tensorflow-conv2d-operation
+
+
+
+tflearn how to get weights of a layer by tflearn:
+https://stackoverflow.com/questions/38296206/how-can-we-get-the-values-of-hidden-layer-nodes-in-tensorflow-tflearn
+
+
+Errors With initializing weights:
+ValueError: If initializer is a constant, do not specify shape.
+https://github.com/tflearn/tflearn/issues/236
+TypeError: 'Constant' object does not support indexing tflearn
+
+import from parent dir:
+https://stackoverflow.com/questions/714063/importing-modules-from-parent-folder
+
+
+
 usage:
 python3 autoEncoder.py >./testFiles/EncoderOutput.txt 2>./testFiles/EncoderError.txt
 python3 classification.py >./testFiles/ClsOutput.txt 2>./testFiles/ClsError.txt
