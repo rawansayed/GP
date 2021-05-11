@@ -78,6 +78,18 @@ TypeError: 'Constant' object does not support indexing tflearn
 import from parent dir:
 https://stackoverflow.com/questions/714063/importing-modules-from-parent-folder
 
+classification:
+https://stats.stackexchange.com/questions/245448/loss-function-for-autoencoders
+
+decounvolution:
+https://machinelearningmastery.com/upsampling-and-transpose-convolution-layers-for-generative-adversarial-networks/
+
+measure accuracy:
+https://www.researchgate.net/post/How_can_I_calculate_the_accuracy#:~:text=The%20accuracy%20can%20be%20defined,TN%20%2B%20FP%20%2B%20FN).
+
+fine tuning examplles:
+https://github.com/tflearn/tflearn/blob/master/examples/basics/finetuning.py
+https://github.com/tflearn/tflearn/blob/master/examples/images/convnet_cifar10.py
 
 
 usage:

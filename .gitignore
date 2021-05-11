@@ -7,6 +7,6 @@ data
 results
 dist
 *.egg-info
-AE
+CP
 venv
 testFiles
