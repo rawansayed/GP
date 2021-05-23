@@ -1,4 +1,4 @@
-from ontarget import Episgt
+from utils import Episgt
 import numpy as np
 
 

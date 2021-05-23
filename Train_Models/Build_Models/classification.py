@@ -18,7 +18,10 @@ def create_classification_model():
     channel_size=[8, 32, 64, 64, 256, 256,512, 512, 1024, 2]
 
     
-    encoder_channel_size= [8, 32, 64, 64, 256, 256]
+    encoder_channel_size= [32, 64, 64, 256, 256]
+    betas =  [
+        tf.Variable(0.0 * tf.ones(encoder_channel_size[i]), name=f'beta_{i}') for i in range(len(encoder_channel_size))
+    ]
     # layer that take the input
     CLS = input_data(shape=[None,1, 23, 8], name='input')
     # Start the encoder layers 
@@ -26,11 +29,13 @@ def create_classification_model():
     for i in range(len(encoder_channel_size)):
         # creating the convolation layers
         if i == 1 or i == 3:
-            CLS = conv_2d(CLS,encoder_channel_size[i], [1, 3],strides=2,bias=False,activation=None,name=f"convEncoder_{i}",trainable=False)
+            CLS = conv_2d(CLS,encoder_channel_size[i], [1, 3],strides=2,name=f"convEncoder_{i}",trainable=False)
         else:
-            CLS = conv_2d(CLS,encoder_channel_size[i], [1, 3],bias=False,activation=None,name=f"convEncoder_{i}",trainable=False)
+            CLS = conv_2d(CLS,encoder_channel_size[i], [1, 3],name=f"convEncoder_{i}",trainable=False)
         # creating the batch normalization layers
         CLS = batch_normalization(CLS,decay=0,name=f"BatchNormalizeEncoder_{i}",trainable=False)
+        
+        CLS = CLS + betas[i]
         # end each layer with relu activation layer
         CLS = activation(CLS,activation='relu', name=f'encoder_relu_{i}')
 
@@ -42,25 +47,27 @@ def create_classification_model():
     for i in range(len(cls_channel_size)-1):
         # creating the convolation layers 
         if i==0:
-            CLS = conv_2d(CLS,cls_channel_size[i], [1, 3], strides=2,bias=False,activation=None,name=f"convCls_{i}",restore=False)
+            CLS = conv_2d(CLS,cls_channel_size[i], [1, 3], strides=2,name=f"convCls_{i}",restore=False)
         if i==1:
-            CLS = conv_2d(CLS,cls_channel_size[i], [1, 3],bias=False,activation=None,name=f"convCls_{i}",restore=False)
+            CLS = conv_2d(CLS,cls_channel_size[i], [1, 3],name=f"convCls_{i}",restore=False)
         if i==2:
-            CLS = conv_2d(CLS,cls_channel_size[i], [1, 3],bias=False,activation=None,name=f"convCls_{i}",restore=False,padding='VALID')
+            CLS = conv_2d(CLS,cls_channel_size[i], [1, 3],name=f"convCls_{i}",restore=False,padding='VALID')
         # creating the batchnormalization layers 
         CLS = batch_normalization(CLS,decay=0.99,name=f"BatchNormalizeCls_{i}",restore=False)
         #end each layer with relu activation layer
         CLS = activation(CLS,activation='relu', name=f'cls_relu_{i}')
 
     # for the last layer we will only do convolution then sigmoid activation 
-    CLS = conv_2d(CLS,cls_channel_size[3], [1, 1],bias=False,activation=None,name="convCls_3",restore=False)
+    CLS = conv_2d(CLS,cls_channel_size[3], [1, 1],name="convCls_3",restore=False)
     CLS = activation(CLS,activation='softmax', name=f'cls_sigmoid_3')
     # and end it with squeeze function so the output end in a shape (-1,)
     CLS = tf.squeeze(CLS, axis=[1, 2])[:, 1]
 
     # we define our optimizer and loss functions and learning rate in the regression layer 
-    CLS = regression(CLS, optimizer='adam', learning_rate=0.0001
-        , loss='binary_crossentropy', name='target', restore=False)
+    CLS = regression(CLS, optimizer='adam', learning_rate=0.01
+        , loss='roc_auc_score', name='target', restore=False)
+    # binary_crossentropy
+    # categorical_crossentropy
 
 
     # creating the model

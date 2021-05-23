@@ -6,7 +6,7 @@ import pandas as pd
 batch_size=256
 def main():
     # loading data
-    X=np.load("inputs.npy")
+    X=np.load("autoencoder_inputs.npy")
     # X=X.reshape([-1,8, 1, 23])
     X = X.transpose([0, 2, 3, 1])
     # print(X[0])
@@ -18,13 +18,17 @@ def main():
     # print(X_dev.shape)
     # print(Y.shape)
     # print(Y_dev.shape)
+    X = X 
+    Y=X
+    X_dev = X_dev 
+    Y_dev = X_dev
     
     # Creating model
     model =create_auto_encoder()
 
     # start training with input as the X train data and target as Y train data
     # and validate/develop over X_dev and Y_dev
-    model.fit({'input': X}, {'target': Y}, n_epoch=36,batch_size=batch_size,
+    model.fit({'input': X}, {'target': Y}, n_epoch=100,batch_size=batch_size,
     validation_set=({'input': X_dev}, {'target': Y_dev}),
     snapshot_step=1000,show_metric=True)
 
