@@ -2,6 +2,7 @@ import tflearn
 from tflearn.layers.core import input_data, activation
 from tflearn.layers.conv import conv_2d , conv_2d_transpose
 from tflearn.activations import relu , sigmoid
+from tflearn.metrics import binary_accuracy_op ,WeightedR2,R2,accuracy
 from tflearn.layers.normalization import batch_normalization 
 from tflearn.data_utils import load_csv
 from tflearn.initializations import uniform
@@ -75,8 +76,11 @@ def create_auto_encoder():
     #     return cross_entropy
 
     # we define our optimizer and loss functions and learning rate in the regression layer 
-    AE = regression(AE, optimizer='adam', learning_rate=0.001, loss='weak_cross_entropy_2d',name='target')
-
+    AE = regression(AE, optimizer='adam',metric=accuracy()
+    , learning_rate=0.001, loss='weak_cross_entropy_2d',name='target')
+    # weak_cross_entropy_2d 60%
+    # binary_crossentropy
+    # categorical_crossentropy
 
 
     # creating the model

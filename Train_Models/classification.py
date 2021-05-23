@@ -35,7 +35,7 @@ def main():
 
     # start training with input as the X train data and target as Y train data
     # and validate/develop over X_dev and Y_dev
-    model.fit({'input': X}, {'target': Y}, n_epoch=100,batch_size=batch_size,
+    model.fit({'input': X}, {'target': Y}, n_epoch=35,batch_size=batch_size,
     validation_set=({'input': X_div}, {'target': Y_div}),
     snapshot_step=1000,show_metric=True)
     
@@ -52,6 +52,7 @@ def main():
         cls_outpot[i] = 1 if cls_outpot[i]>0.5 else 0
     T = np.sum(cls_outpot==Y_test)
     AccuracyMesaure= (T)/(Y_test.shape[0])
+    print(cls_outpot[0])
     print(AccuracyMesaure)
 
     # measuring accuracy for development data

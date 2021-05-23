@@ -1,7 +1,7 @@
 from utils import Episgt
 import numpy as np
 
-dict = "./"
+dict = "./database/paper_data-classification/paper_data/ontar"
 files = ['hct116_hart.episgt','hek293t_doench.episgt','hela_hart.episgt','hl60_xu.episgt']
 totaldata = np.array([None]*4)
 for i in range(4):
@@ -13,11 +13,11 @@ for i in range(4):
 dataArr = np.concatenate((totaldata))
 datainverse=dataArr[...,::-1]
 print(dataArr.shape)
-np.save("inputs.npy",dataArr)
+np.save("sav1.npy",dataArr)
 print(dataArr[0])
 
 print(datainverse.shape)
-np.save("inputs2.npy",datainverse)
+np.save("sav2.npy",datainverse)
 print(datainverse[0])
 
 Data=np.concatenate((datainverse,dataArr))

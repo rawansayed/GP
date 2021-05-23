@@ -6,7 +6,7 @@ import pandas as pd
 batch_size=256
 def main():
     # loading data
-    X=np.load("autoencoder_inputs.npy")
+    X=np.load("DATA.npy")
     # X=X.reshape([-1,8, 1, 23])
     X = X.transpose([0, 2, 3, 1])
     # print(X[0])

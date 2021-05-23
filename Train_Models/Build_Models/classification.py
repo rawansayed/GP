@@ -9,6 +9,7 @@ from tflearn.data_utils import load_csv
 from tflearn.initializations import uniform
 from tflearn.layers.estimator import regression
 from sklearn.model_selection import train_test_split
+from tflearn.metrics import accuracy
 import pandas as pd 
 import numpy as np
 batch_size=256
@@ -64,7 +65,7 @@ def create_classification_model():
     CLS = tf.squeeze(CLS, axis=[1, 2])[:, 1]
 
     # we define our optimizer and loss functions and learning rate in the regression layer 
-    CLS = regression(CLS, optimizer='adam', learning_rate=0.01
+    CLS = regression(CLS, optimizer='adam', learning_rate=0.01,metric=accuracy()
         , loss='roc_auc_score', name='target', restore=False)
     # binary_crossentropy
     # categorical_crossentropy
