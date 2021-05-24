@@ -48,7 +48,7 @@ def create_regression_model():
     # All these layers have parameter restore = False so it doesn't restor these layer from the encoder files to do not make errors
     # of course when we will run these files after trainig we will need to change this parameter
     reg_channel_size = [512, 512, 1024,1]
-    for i in range(len(reg_channel_size) - 1):
+    for i in range(len(reg_channel_size)-1):
         # creating the convolation layers 
         if i==0:
             REG = conv_2d(REG,reg_channel_size[i], [1, 3], strides=2,name=f"convReg_{i}",restore=False)
@@ -69,9 +69,7 @@ def create_regression_model():
 
     # we define our optimizer and loss functions and learning rate in the regression layer 
     REG = regression(REG, optimizer='adam', learning_rate=0.01,metric=accuracy()
-        , loss='roc_auc_score', name='target', restore=False)
-    # binary_crossentropy
-    # categorical_crossentropy
+        , loss='weighted_crossentropy', name='target', restore=False)
 
 
     # creating the model
