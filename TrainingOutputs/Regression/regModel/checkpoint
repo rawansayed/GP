@@ -1,0 +1,2 @@
+model_checkpoint_path: "D:\\Graduation Project\\GP\\TrainingOutputs\\Regression\\regModel\\RegressionModel.tfl"
+all_model_checkpoint_paths: "D:\\Graduation Project\\GP\\TrainingOutputs\\Regression\\regModel\\RegressionModel.tfl"
