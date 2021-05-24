@@ -11,6 +11,7 @@ def main():
     X=np.load("inputs.npy")
     y=np.load("labels.npy")
     X = X.transpose([0, 2, 3, 1])
+    # y = y.reshape([-1,1,1,1])
     # print(X[0])
     # print(X.shape)
     # print(y.shape)
@@ -35,7 +36,7 @@ def main():
 
     # start training with input as the X train data and target as Y train data
     # and validate/develop over X_dev and Y_dev
-    model.fit({'input': X}, {'target': Y}, n_epoch=35,batch_size=batch_size,
+    model.fit({'input': X}, {'target': Y}, n_epoch=50,batch_size=batch_size,
     validation_set=({'input': X_div}, {'target': Y_div}),
     snapshot_step=1000,show_metric=True)
     
@@ -48,11 +49,12 @@ def main():
 
     # measuring accuracy for test data
     cls_outpot = model.predict(X_test)
+    print(cls_outpot.reshape((-1,)))
+    print(Y_test.reshape((-1,)))
     for i in range(len(cls_outpot)):
         cls_outpot[i] = 1 if cls_outpot[i]>0.5 else 0
     T = np.sum(cls_outpot==Y_test)
     AccuracyMesaure= (T)/(Y_test.shape[0])
-    print(cls_outpot[0])
     print(AccuracyMesaure)
 
     # measuring accuracy for development data
