@@ -60,13 +60,22 @@ def create_classification_model():
 
     # for the last layer we will only do convolution then sigmoid activation 
     CLS = conv_2d(CLS,cls_channel_size[3], [1, 1],name="convCls_3",restore=False)
+
+    # #########################################################
+    # CLS = conv_2d(CLS,1, [1, 1],name="convCls_3",restore=False)
+    # CLS = activation(CLS,activation='relu', name=f'cls_sigmoid_3')
+    
+    # CLS = conv_2d(CLS,1, [1, 1],name="convCls_4",restore=False)
+    # CLS = activation(CLS,activation='relu', name=f'cls_sigmoid_4')
+    # #########################################################
+
     CLS = activation(CLS,activation='softmax', name=f'cls_sigmoid_3')
     # and end it with squeeze function so the output end in a shape (-1,)
     CLS = tf.squeeze(CLS, axis=[1, 2])[:, 1]
 
     # we define our optimizer and loss functions and learning rate in the regression layer 
     CLS = regression(CLS, optimizer='adam', learning_rate=0.01,metric=accuracy()
-        , loss='roc_auc_score', name='target', restore=False)
+        , loss='binary_crossentropy', name='target', restore=False)
     # binary_crossentropy
     # categorical_crossentropy
 
