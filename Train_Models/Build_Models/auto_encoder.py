@@ -34,7 +34,7 @@ def create_auto_encoder():
         else:
             AE = conv_2d(AE,encoder_channel_size[i], [1, 3],name=f"convEncoder_{i}")
         # creating the batch normalization layers
-        AE = batch_normalization(AE,decay=0,name=f"BatchNormalizeEncoder_{i}",trainable=False)
+        AE = batch_normalization(AE,decay=0,name=f"BatchNormalizeEncoder_{i}")#,trainable=False
 
         AE = AE + betas[i]
         # AE = tf.math.add( AE, betas, name=f'add_beta_{i}')
@@ -58,7 +58,7 @@ def create_auto_encoder():
         if i == 4:
             AE = conv_2d_transpose(AE,decoder_channel_size[i], [1, 3],[1,23],name=f"convTransDecoder_{i}")
         # creating the batch normalization layers
-        AE = batch_normalization(AE,decay=0,name=f"BatchNormalizeDecoder_{i}",trainable=False)
+        AE = batch_normalization(AE,decay=0,name=f"BatchNormalizeDecoder_{i}")#,trainable=False
         # end each layer with sigmoid activation layer
         AE = activation(AE,activation='relu', name=f'decoder_sigmoid_{i}')
     
@@ -77,10 +77,10 @@ def create_auto_encoder():
 
     # we define our optimizer and loss functions and learning rate in the regression layer 
     AE = regression(AE, optimizer='adam',metric=accuracy()
-    , learning_rate=0.001, loss='weak_cross_entropy_2d',name='target')
-    # weak_cross_entropy_2d 60%
-    # binary_crossentropy
-    # categorical_crossentropy
+    , learning_rate=0.001, loss='binary_crossentropy',name='target')
+    # weak_cross_entropy_2d 60% 64 64
+    # binary_crossentropy 60% 64 64
+    # categorical_crossentropy (LOL)
 
 
     # creating the model
