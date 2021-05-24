@@ -36,7 +36,7 @@ def main():
 
     # start training with input as the X train data and target as Y train data
     # and validate/develop over X_dev and Y_dev
-    model.fit({'input': X}, {'target': Y}, n_epoch=10,batch_size=batch_size,
+    model.fit({'input': X}, {'target': Y}, n_epoch=50,batch_size=batch_size,
     validation_set=({'input': X_div}, {'target': Y_div}),
     snapshot_step=1000,show_metric=True)
     
