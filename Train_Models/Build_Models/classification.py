@@ -76,7 +76,7 @@ def create_classification_model():
 
     # we define our optimizer and loss functions and learning rate in the regression layer 
     CLS = regression(CLS, optimizer='adam', learning_rate=0.001,metric=accuracy()
-        , loss='categorical_crossentropy', name='target', restore=False)
+        , loss='binary_crossentropy', name='target', restore=False)
     # binary_crossentropy
     # categorical_crossentropy
 
