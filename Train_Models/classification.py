@@ -17,7 +17,7 @@ def main():
     # print(y.shape)
 
     # Creating train and development and test data
-    X, X_test, Y, Y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+    X, X_test, Y, Y_test = train_test_split(X, y, test_size=0.33, random_state=42,shuffle=True)
     X_div, X_test, Y_div, Y_test = train_test_split(X_test, Y_test, test_size=0.1, random_state=42)
     
     # print(X_div.shape)
@@ -36,7 +36,7 @@ def main():
 
     # start training with input as the X train data and target as Y train data
     # and validate/develop over X_dev and Y_dev
-    model.fit({'input': X}, {'target': Y}, n_epoch=50,batch_size=batch_size,
+    model.fit({'input': X}, {'target': Y}, n_epoch=20,batch_size=batch_size,
     validation_set=({'input': X_div}, {'target': Y_div}),
     snapshot_step=1000,show_metric=True)
     
@@ -54,6 +54,7 @@ def main():
     for i in range(len(cls_outpot)):
         cls_outpot[i] = 1 if cls_outpot[i]>0.5 else 0
     T = np.sum(cls_outpot==Y_test)
+    print(cls_outpot,T)
     AccuracyMesaure= (T)/(Y_test.shape[0])
     print(AccuracyMesaure)
 
