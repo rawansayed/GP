@@ -39,7 +39,7 @@ def main():
     # save the model
     model.save("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl")
     
-    model.load("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl")
+    # model.load("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl")
     def accuracy(y_pred,Y_output):
 
         return
