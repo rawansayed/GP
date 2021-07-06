@@ -9,6 +9,7 @@ from tflearn.data_utils import load_csv
 from tflearn.initializations import uniform
 from tflearn.layers.estimator import regression
 from sklearn.model_selection import train_test_split
+from tflearn.layers.core import dropout
 from tflearn.metrics import accuracy
 import pandas as pd 
 import numpy as np
@@ -35,10 +36,10 @@ def create_classification_model():
             CLS = conv_2d(CLS,encoder_channel_size[i], [1, 3],name=f"convEncoder_{i}",trainable=False)
         # creating the batch normalization layers
         CLS = batch_normalization(CLS,decay=0,name=f"BatchNormalizeEncoder_{i}",trainable=False)
-        
         CLS = CLS + betas[i]
         # end each layer with relu activation layer
         CLS = activation(CLS,activation='relu', name=f'encoder_relu_{i}')
+        CLS = dropout(CLS,1,name=f'Dropout_{i}')
 
 
     # Classifiction Layers
@@ -57,6 +58,7 @@ def create_classification_model():
         CLS = batch_normalization(CLS,decay=0.99,name=f"BatchNormalizeCls_{i}",restore=False)
         #end each layer with relu activation layer
         CLS = activation(CLS,activation='relu', name=f'cls_relu_{i}')
+        CLS = dropout(CLS,0.8,name=f'Dropout_{i}')
 
     # for the last layer we will only do convolution then sigmoid activation 
     CLS = conv_2d(CLS,cls_channel_size[3], [1, 1],name="convCls_3",restore=False)

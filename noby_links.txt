@@ -92,6 +92,19 @@ https://github.com/tflearn/tflearn/blob/master/examples/basics/finetuning.py
 https://github.com/tflearn/tflearn/blob/master/examples/images/convnet_cifar10.py
 
 
+to use callback:
+https://github.com/tflearn/tflearn/issues/646
+https://stackoverflow.com/questions/47079111/create-keras-callback-to-save-model-predictions-and-targets-for-each-batch-durin
+
+equation for Accuracy , F1, Precition,Recall:
+https://towardsdatascience.com/accuracy-precision-recall-or-f1-331fb37c5cb9
+
+how to use pandas to save multiple arrays in csv:
+https://stackoverflow.com/questions/30522724/take-multiple-lists-into-dataframe
+
+how to get auc-roc score:
+https://www.analyticsvidhya.com/blog/2020/06/auc-roc-curve-machine-learning/
+
 usage:
 python3 autoEncoder.py >./testFiles/EncoderOutput.txt 2>./testFiles/EncoderError.txt
 python3 classification.py >./testFiles/ClsOutput.txt 2>./testFiles/ClsError.txt
