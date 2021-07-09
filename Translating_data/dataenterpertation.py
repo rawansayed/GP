@@ -1,4 +1,4 @@
-from ontar import Episgt
+from ontarget import Episgt
 import numpy as np
 
 
@@ -10,8 +10,8 @@ input_data = Episgt(file_path1, num_epi_features=4, with_y=True)
 x_1, y_1 = input_data.get_dataset()
 X_1 = np.expand_dims(x_1, axis=2)
 # X = X.transpose([0, 2, 3, 1])
-np.save("inputs.npy",X_1)
-np.save("labels.npy",y_1)
+np.save("inputs_cls.npy",X_1)
+np.save("labels_cls.npy",y_1)
 
 
 # --------------- For Regression --------------- #

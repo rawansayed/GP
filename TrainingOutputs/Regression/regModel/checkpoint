@@ -1,2 +1,2 @@
-model_checkpoint_path: "D:\\Graduation Project\\GP\\TrainingOutputs\\Regression\\regModel\\RegressionModel.tfl"
-all_model_checkpoint_paths: "D:\\Graduation Project\\GP\\TrainingOutputs\\Regression\\regModel\\RegressionModel.tfl"
+model_checkpoint_path: "D:\\BIOMEDICAL ENGINEERING\\GP\\GP\\TrainingOutputs\\Regression\\regModel\\RegressionModel.tfl"
+all_model_checkpoint_paths: "D:\\BIOMEDICAL ENGINEERING\\GP\\GP\\TrainingOutputs\\Regression\\regModel\\RegressionModel.tfl"

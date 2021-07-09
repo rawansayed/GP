@@ -47,8 +47,8 @@ def accuracyForCLSMODEL(X_pred,Y_true,lowThresh,highThresh):
 
 def main():
     # loading data
-    x=np.load("inputs.npy")
-    y=np.load("labels.npy")
+    x=np.load("inputs_cls.npy")
+    y=np.load("labels_cls.npy")
     x = x.transpose([0, 2, 3, 1])
     # y=y.reshape((-1))
     # y = y.reshape([-1,1,1,1])

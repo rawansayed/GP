@@ -69,7 +69,7 @@ def create_regression_model():
 
     # we define our optimizer and loss functions and learning rate in the regression layer 
     REG = regression(REG, optimizer='adam', learning_rate=0.01,metric=accuracy()
-        , loss='weighted_crossentropy', name='target', restore=False)
+        , loss='mean_square', name='target', restore=False)
 
 
     # creating the model

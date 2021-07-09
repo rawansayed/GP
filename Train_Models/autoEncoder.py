@@ -6,7 +6,7 @@ import pandas as pd
 batch_size=256
 def main():
     # loading data
-    X=np.load("DATA.npy")
+    X=np.load("DATA_Classification.npy")
     # X=X.reshape([-1,8, 1, 23])
     X = X.transpose([0, 2, 3, 1])
     # print(X[0])
@@ -37,7 +37,7 @@ def main():
     snapshot_step=1000,show_metric=True)
 
     # save the model
-    model.save("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl")
+    model.save("./TrainingOutputs/autoencoder/autoencoderModel/Classification_Model/model.tfl")
     
     # model.load("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl")
     def accuracy(y_pred,Y_output):
@@ -46,13 +46,13 @@ def main():
 
 
     df=pd.DataFrame(X_test[0].reshape(23, 8))
-    df.to_csv("./TrainingOutputs/inputs.csv")
+    df.to_csv("./TrainingOutputs/inputs_classification.csv")
 
     encode_decode = model.predict(X_test[0].reshape(1,1, 23, 8))
     output=np.array(encode_decode)
     output[:] = output[:]>0.5
     df=pd.DataFrame(output.reshape(23, 8))
-    df.to_csv("./TrainingOutputs/outputs.csv")
+    df.to_csv("./TrainingOutputs/outputs_classification.csv")
     # print(accuracy())
     # print(accuracy())
     # print(accuracy())
