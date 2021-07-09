@@ -99,6 +99,8 @@ def main():
             self.testFP = []
             self.testTN = []
             self.testFN = []
+            self.testAUC = []
+            self.WSAUC = []
 
         def on_epoch_end(self, training_state):
             Y_pred = model.predict(X)
@@ -135,45 +137,83 @@ def main():
             self.testFN.append( testFN)
 
             pred_prob=model.predict(X_test)
-            print("test AUC value :",roc_auc_score(Y_test, pred_prob))
+            test_auc_val=roc_auc_score(Y_test, pred_prob)
+            print("test AUC value :",test_auc_val)
+            self.testAUC.append( test_auc_val)
+
             pred_prob=model.predict(x)
-            print("whole AUC value :",roc_auc_score(y, pred_prob))
-            
+            ws_auc_val=roc_auc_score(y, pred_prob)
+            print("whole AUC value :",ws_auc_val)
+            self.WSAUC.append( ws_auc_val)
 
             print(trainAccuracyMesaure,
             devAccuracyMesaure,
             testAccuracyMesaure)
 
+            df=pd.DataFrame(
+                {
+                    'training set Accuracy': self.trainAcc,
+                    # 'training set Precittion': self.trainPrec,
+                    # 'training set Recall': self.trainRecall,
+                    # 'training set F1 score': self.trainF1,
+                    'development set Accuracy': self.devAcc,
+                    # 'development set Precittion': self.devPrec,
+                    # 'development set Recall': self.devRecall,
+                    # 'development set F1 score': self.devF1,
+                    'test set Accuracy': self.testAcc,
+                    # 'test set Precittion': self.testPrec,
+                    # 'test set Recall': self.testRecall,
+                    # 'test set F1 score': self.testF1,
+                    # 'training set True positive ratio': self.trainTP,
+                    # 'training set True negative ratio': self.trainTN,
+                    # 'training set False positive ratio': self.trainFP,
+                    # 'training set False negative ratio': self.trainFN,
+                    # 'development set True positive ratio': self.devTP,
+                    # 'development set True negative ratio': self.devTN,
+                    # 'development set False positive ratio': self.devFP,
+                    # 'development set False negative ratio': self.devFN,
+                    # 'test set True positive ratio': self.testTP,
+                    # 'test set True negative ratio': self.testTN,
+                    # 'test set False positive ratio': self.testFP,
+                    # 'test set False negative ratio': self.testFN,
+                    'test AUC score':self.testAUC,
+                    'test AUC score':self.WSAUC,
+
+                })
+            df.to_csv("./TrainingOutputs/ClsAccuracies.csv")
+
         def on_train_end(self,training_state):
             df=pd.DataFrame(
                 {
                     'training set Accuracy': self.trainAcc,
-                    'training set Precittion': self.trainPrec,
-                    'training set Recall': self.trainRecall,
-                    'training set F1 score': self.trainF1,
+                    # 'training set Precittion': self.trainPrec,
+                    # 'training set Recall': self.trainRecall,
+                    # 'training set F1 score': self.trainF1,
                     'development set Accuracy': self.devAcc,
-                    'development set Precittion': self.devPrec,
-                    'development set Recall': self.devRecall,
-                    'development set F1 score': self.devF1,
+                    # 'development set Precittion': self.devPrec,
+                    # 'development set Recall': self.devRecall,
+                    # 'development set F1 score': self.devF1,
                     'test set Accuracy': self.testAcc,
-                    'test set Precittion': self.testPrec,
-                    'test set Recall': self.testRecall,
-                    'test set F1 score': self.testF1,
-                    'training set True positive ratio': self.trainTP,
-                    'training set True negative ratio': self.trainTN,
-                    'training set False positive ratio': self.trainFP,
-                    'training set False negative ratio': self.trainFN,
-                    'development set True positive ratio': self.devTP,
-                    'development set True negative ratio': self.devTN,
-                    'development set False positive ratio': self.devFP,
-                    'development set False negative ratio': self.devFN,
-                    'test set True positive ratio': self.testTP,
-                    'test set True negative ratio': self.testTN,
-                    'test set False positive ratio': self.testFP,
-                    'test set False negative ratio': self.testFN,
+                    # 'test set Precittion': self.testPrec,
+                    # 'test set Recall': self.testRecall,
+                    # 'test set F1 score': self.testF1,
+                    # 'training set True positive ratio': self.trainTP,
+                    # 'training set True negative ratio': self.trainTN,
+                    # 'training set False positive ratio': self.trainFP,
+                    # 'training set False negative ratio': self.trainFN,
+                    # 'development set True positive ratio': self.devTP,
+                    # 'development set True negative ratio': self.devTN,
+                    # 'development set False positive ratio': self.devFP,
+                    # 'development set False negative ratio': self.devFN,
+                    # 'test set True positive ratio': self.testTP,
+                    # 'test set True negative ratio': self.testTN,
+                    # 'test set False positive ratio': self.testFP,
+                    # 'test set False negative ratio': self.testFN,
+                    'test AUC score':self.testAUC,
+                    'test AUC score':self.WSAUC,
 
                 })
-            df.to_csv("./TrainingOutputs/ClsAcuuracies.csv")
+            df.to_csv("./TrainingOutputs/ClsAccuracies.csv")
 
             
 
@@ -181,13 +221,13 @@ def main():
     model=create_classification_model()
 
     # loading encoder weights
-    model.load("./TrainingOutputs/autoencoder/autoencoderModel/model.tfl")
+    model.load("./TrainingOutputs/autoencoder/autoencoderModel/Classification_Model/model.tfl")
     
     monitorCallback = MonitorCallback()
 
     # start training with input as the X train data and target as Y train data
     # and validate/develop over X_dev and Y_dev
-    model.fit({'input': X}, {'target': Y}, n_epoch=18,batch_size=batch_size,
+    model.fit({'input': X}, {'target': Y}, n_epoch=200,batch_size=batch_size,
     validation_set=({'input': X_div}, {'target': Y_div}),
     snapshot_step=1000,show_metric=True, callbacks=monitorCallback)
     
@@ -225,4 +265,3 @@ def main():
     # print(model.evaluate(X,Y))
     
 main()
-
