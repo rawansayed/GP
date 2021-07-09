@@ -10,6 +10,7 @@ from tflearn.initializations import uniform
 from tflearn.layers.estimator import regression
 from sklearn.model_selection import train_test_split
 from tflearn.metrics import accuracy
+from tflearn.layers.core import dropout
 import pandas as pd 
 import numpy as np
 
@@ -37,11 +38,11 @@ def create_regression_model():
         else:
             REG = conv_2d(REG,encoder_channel_size[i], [1, 3],name=f"convEncoder_{i}",trainable=False)
         # creating the batch normalization layers
-        REG = batch_normalization(REG,decay=0,name=f"BatchNormalizeEncoder_{i}",trainable=False)
-        
+        REG = batch_normalization(REG,decay=0,name=f"BatchNormalizeEncoder_{i}",trainable=False)     
         REG = REG + betas[i]
         # end each layer with relu activation layer
         REG = activation(REG,activation='relu', name=f'encoder_relu_{i}')
+        REG = dropout(REG,1,name=f'Dropout_{i}')
 
 
     # Regression Layers
@@ -60,6 +61,7 @@ def create_regression_model():
         REG = batch_normalization(REG,decay=0.99,name=f"BatchNormalizeReg_{i}",restore=False)
         #end each layer with relu activation layer
         REG = activation(REG,activation='relu', name=f'reg_relu_{i}')
+        REG = dropout(REG,1,name=f'Dropout_{i}')
 
     # for the last layer we will only do convolution then sigmoid activation 
     REG = conv_2d(REG,reg_channel_size[3], [1, 1],name="convReg_3",restore=False)
