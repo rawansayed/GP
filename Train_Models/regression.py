@@ -158,7 +158,7 @@ def main():
     # and validate/develop over X_dev and Y_dev
     model.fit({'input': X}, {'target': Y}, n_epoch=20,batch_size=batch_size,
     validation_set=({'input': X_div}, {'target': Y_div}),
-    snapshot_step=1000,show_metric=True)
+    snapshot_step=1000,show_metric=True, callbacks=monitorCallback)
     
     # save the model
     model.save("./TrainingOutputs/Regression/regModel/RegressionModel.tfl")
