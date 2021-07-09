@@ -6,7 +6,13 @@ import pandas as pd
 batch_size=256
 def main():
     # loading data
-    X=np.load("DATA_Classification.npy")
+    dataCls=np.load("DATA_Classification.npy")
+    dataReg=np.load("DATA_Regression.npy")
+    X=np.concatenate((dataCls, dataReg))
+
+    # X=np.load("DATA_Regression.npy")
+    # X=np.load("DATA_Classification.npy")
+
     # X=X.reshape([-1,8, 1, 23])
     X = X.transpose([0, 2, 3, 1])
     # print(X[0])
