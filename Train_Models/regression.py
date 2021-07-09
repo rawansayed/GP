@@ -9,8 +9,8 @@ batch_size=256
 
 def main():
     # loading data
-    X=np.load("D:\BIOMEDICAL ENGINEERING\GP\GP\inputs_reg.npy")
-    y=np.load("D:\BIOMEDICAL ENGINEERING\GP\GP\labels_reg.npy")
+    X=np.load("inputs_reg.npy")
+    y=np.load("labels_reg.npy")
     X = X.transpose([0, 2, 3, 1])
 
     # Creating train and development and test data
