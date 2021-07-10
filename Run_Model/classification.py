@@ -19,8 +19,8 @@ def accuracyForCLSMODEL(X_pred,Y_true,lowThresh,highThresh):
 
 def main():
     # loading data
-    x=np.load("inputs.npy")
-    y=np.load("labels.npy")
+    x=np.load("inputs_cls.npy")
+    y=np.load("labels_cls.npy")
     x = x.transpose([0, 2, 3, 1])
     X=np.load("./temp/X_train.npy")
     X_dev=np.load("./temp/X_dev.npy")
@@ -76,11 +76,11 @@ def main():
 
     # measuring accuracy for train data
     cls_outpot = model.predict(X)
-    train_acc = accuracyForCLSMODEL(cls_outpot,Y,0.3,0.7)
+    train_acc = accuracyForCLSMODEL(cls_outpot,Y,0.5,0.5)
     cls_outpot = model.predict(X_dev)
-    dev_acc = accuracyForCLSMODEL(cls_outpot,Y_dev,0.3,0.7)
+    dev_acc = accuracyForCLSMODEL(cls_outpot,Y_dev,0.5,0.5)
     cls_outpot = model.predict(X_test)
-    test_acc = accuracyForCLSMODEL(cls_outpot,Y_test,0.3,0.7)
+    test_acc = accuracyForCLSMODEL(cls_outpot,Y_test,0.5,0.5)
 
     from sklearn.metrics import roc_curve
     from sklearn.metrics import roc_auc_score

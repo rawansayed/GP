@@ -177,7 +177,7 @@ def main():
                     # 'test set False positive ratio': self.testFP,
                     # 'test set False negative ratio': self.testFN,
                     'test AUC score':self.testAUC,
-                    'test AUC score':self.WSAUC,
+                    # 'whole AUC score':self.WSAUC,
 
                 })
             df.to_csv("./TrainingOutputs/ClsAccuracies.csv")
@@ -210,7 +210,7 @@ def main():
                     # 'test set False positive ratio': self.testFP,
                     # 'test set False negative ratio': self.testFN,
                     'test AUC score':self.testAUC,
-                    'test AUC score':self.WSAUC,
+                    'whole AUC score':self.WSAUC,
 
                 })
             df.to_csv("./TrainingOutputs/ClsAccuracies.csv")
