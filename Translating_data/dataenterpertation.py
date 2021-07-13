@@ -12,24 +12,24 @@ import numpy as np
 # # X = X.transpose([0, 2, 3, 1])
 # np.save("inputs_cls.npy",X_1)
 # np.save("labels_cls.npy",y_1)
-dict = "./database/paper_data-classification/paper_data/ontar"
-files = ['hct116_hart.episgt','hek293t_doench.episgt','hela_hart.episgt','hl60_xu.episgt']
-totaldata_x = np.array([None]*4)
-totaldata_y = np.array([None]*4)
+# dict = "./database/paper_data-classification/paper_data/ontar"
+# files = ['hct116_hart.episgt','hek293t_doench.episgt','hela_hart.episgt','hl60_xu.episgt']
+# totaldata_x = np.array([None]*4)
+# totaldata_y = np.array([None]*4)
 
-for i in range(4):
-    path = dict+'/'+files[i]
-    input_data = Episgt(path, num_epi_features=4, with_y=True)
-    x, y = input_data.get_dataset()
-    totaldata_x[i] = np.expand_dims(x, axis=2)
-    totaldata_y[i] = np.expand_dims(y, axis=1)
+# for i in range(4):
+#     path = dict+'/'+files[i]
+#     input_data = Episgt(path, num_epi_features=4, with_y=True)
+#     x, y = input_data.get_dataset()
+#     totaldata_x[i] = np.expand_dims(x, axis=2)
+#     totaldata_y[i] = np.expand_dims(y, axis=1)
 
-dataArr_x = np.concatenate((totaldata_x))
-print(dataArr_x.shape)
-dataArr_y = np.concatenate((totaldata_y))
-print(dataArr_y.shape)
-np.save("inputs_cls.npy",dataArr_x)
-np.save("labels_cls.npy",dataArr_y)
+# dataArr_x = np.concatenate((totaldata_x))
+# print(dataArr_x.shape)
+# dataArr_y = np.concatenate((totaldata_y))
+# print(dataArr_y.shape)
+# np.save("inputs_cls.npy",dataArr_x)
+# np.save("labels_cls.npy",dataArr_y)
     
 
 # --------------- For Regression --------------- #
@@ -41,22 +41,43 @@ np.save("labels_cls.npy",dataArr_y)
 # np.save("inputs_reg.npy",X_2)
 # np.save("labels_reg.npy",y_2)
 
+#first 3 cell lines only
+# dict = "./database/paper_data-regression/paper_data2/ontar"
+# files = ['hct116.repisgt','hek293t.repisgt','hela.repisgt']
+# totaldata_x = np.array([None]*3)
+# totaldata_y = np.array([None]*3)
+
+# for i in range(3):
+#     path = dict+'/'+files[i]
+#     input_data = Episgt(path, num_epi_features=4, with_y=True)
+#     x, y = input_data.get_dataset()
+#     totaldata_x[i] = np.expand_dims(x, axis=2)
+#     totaldata_y[i] = np.expand_dims(y, axis=1)
+
+# dataArr_x = np.concatenate((totaldata_x))
+# print(dataArr_x.shape)
+# dataArr_y = np.concatenate((totaldata_y))
+# print(dataArr_y.shape)
+# np.save("inputs_reg.npy",dataArr_x)
+# np.save("labels_reg.npy",dataArr_y)
 
 dict = "./database/paper_data-regression/paper_data2/ontar"
-files = ['hct116.repisgt','hek293t.repisgt','hela.repisgt','hl60.repisgt']
-totaldata_x = np.array([None]*4)
-totaldata_y = np.array([None]*4)
+files = ['hl60.repisgt']
+totaldata_x = np.array([None])
+totaldata_y = np.array([None])
 
-for i in range(4):
+for i in range(1):
     path = dict+'/'+files[i]
     input_data = Episgt(path, num_epi_features=4, with_y=True)
     x, y = input_data.get_dataset()
     totaldata_x[i] = np.expand_dims(x, axis=2)
     totaldata_y[i] = np.expand_dims(y, axis=1)
-
+    
 dataArr_x = np.concatenate((totaldata_x))
-print(dataArr_x.shape)
 dataArr_y = np.concatenate((totaldata_y))
+print(dataArr_x.shape)
 print(dataArr_y.shape)
-np.save("inputs_reg.npy",dataArr_x)
-np.save("labels_reg.npy",dataArr_y)
+
+np.save("inputs_test_reg.npy",dataArr_x)
+np.save("labels_test_reg.npy",dataArr_y)
+

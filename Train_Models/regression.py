@@ -16,10 +16,13 @@ def main():
     y=np.load("labels_reg.npy")
     x = x.transpose([0, 2, 3, 1])
     y = y.reshape((-1))
-
     # Creating train and development and test data
-    X, X_test, Y, Y_test = train_test_split(x, y, test_size=0.33, random_state=42,shuffle=True)
-    X_div, X_test, Y_div, Y_test = train_test_split(X_test, Y_test, test_size=0.33, random_state=42)
+    X, X_div, Y, Y_div = train_test_split(x, y, test_size=0.33, random_state=42,shuffle=True)
+    # X_div, X_test, Y_div, Y_test = train_test_split(X_div, Y_div, test_size=0.33, random_state=42)
+    X_test=np.load('./inputs_test_reg.npy')
+    X_test = X_test.transpose([0, 2, 3, 1])
+    Y_test=np.load('./labels_test_reg.npy')
+    Y_test=Y_test.reshape((-1))
 
     class MonitorCallback(tflearn.callbacks.Callback):
         def __init__(self):
@@ -33,17 +36,28 @@ def main():
             pred_prob=model.predict(X_test)
             print("test Spearman Corr value :",spearmanr(Y_test,pred_prob))
             test_error_val=mean_squared_error(Y_test,pred_prob)
+            print("Test MSE value :",test_error_val)
             test_SPEAR_val=spearmanr(Y_test,pred_prob)
             self.testSPEAR.append( test_SPEAR_val)
             self.testError.append( test_error_val)
 
-            pred_prob=model.predict(X)
+            pred_prob=model.predict(x)
             print("Whole Spearman Corr value :",spearmanr(y,pred_prob))
-            train_error_val=mean_squared_error(Y,pred_prob)
             ws_SPEAR_val=spearmanr( y,pred_prob)
             self.WSSPEAR.append( ws_SPEAR_val)
-            self.trainError.append(train_error_val)
 
+            pred_prob=model.predict(X)
+            train_error_val=mean_squared_error(Y,pred_prob)
+            print("Train MSE value :",train_error_val)
+            self.trainError.append(train_error_val)
+            df=pd.DataFrame(
+                {
+                    'test SPEAR score':self.testSPEAR,
+                    'whole SPEAR score':self.WSSPEAR,
+                    'test ERROR score':self.testError,
+                    'train ERROR score':self.trainError,
+                })
+            df.to_csv("./TrainingOutputs/REGAccuracies.csv")
 
         def on_train_end(self,training_state):
             df=pd.DataFrame(
@@ -51,7 +65,7 @@ def main():
                     'test SPEAR score':self.testSPEAR,
                     'whole SPEAR score':self.WSSPEAR,
                     'test ERROR score':self.testError,
-                    'train ERROR score':self.trainError
+                    'train ERROR score':self.trainError,
                 })
             df.to_csv("./TrainingOutputs/REGAccuracies.csv")
       

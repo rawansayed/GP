@@ -40,6 +40,7 @@ def create_regression_model():
         # creating the batch normalization layers
         REG = batch_normalization(REG,decay=0,name=f"BatchNormalizeEncoder_{i}",trainable=False)     
         REG = REG + betas[i]
+        REG = dropout(REG,0.8,name=f'Dropout_{i}')
         # end each layer with relu activation layer
         REG = activation(REG,activation='relu', name=f'encoder_relu_{i}')
 
@@ -59,7 +60,7 @@ def create_regression_model():
         REG = batch_normalization(REG,decay=0.99,name=f"BatchNormalizeReg_{i}",restore=False)
         #end each layer with relu activation layer
         REG = activation(REG,activation='relu', name=f'reg_relu_{i}')
-
+        REG = dropout(REG,0.8,name=f'Dropout_{i}')
     # for the last layer we will only do convolution then sigmoid activation 
     REG = conv_2d(REG,reg_channel_size[3], [1, 1],name="convReg_3",restore=False)
     
