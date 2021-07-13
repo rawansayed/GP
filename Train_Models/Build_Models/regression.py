@@ -42,8 +42,6 @@ def create_regression_model():
         REG = REG + betas[i]
         # end each layer with relu activation layer
         REG = activation(REG,activation='relu', name=f'encoder_relu_{i}')
-        REG = dropout(REG,1,name=f'Dropout_{i}')
-
 
     # Regression Layers
     # All these layers have parameter restore = False so it doesn't restor these layer from the encoder files to do not make errors
@@ -61,16 +59,16 @@ def create_regression_model():
         REG = batch_normalization(REG,decay=0.99,name=f"BatchNormalizeReg_{i}",restore=False)
         #end each layer with relu activation layer
         REG = activation(REG,activation='relu', name=f'reg_relu_{i}')
-        REG = dropout(REG,1,name=f'Dropout_{i}')
 
     # for the last layer we will only do convolution then sigmoid activation 
     REG = conv_2d(REG,reg_channel_size[3], [1, 1],name="convReg_3",restore=False)
     
     # and end it with squeeze function so the output end in a shape (-1,)
+    
     REG = tf.squeeze(REG, axis=[1, 2, 3])
 
     # we define our optimizer and loss functions and learning rate in the regression layer 
-    REG = regression(REG, optimizer='adam', learning_rate=0.01,metric=accuracy()
+    REG = regression(REG, optimizer='adam', learning_rate=0.001
         , loss='mean_square', name='target', restore=False)
 
 
