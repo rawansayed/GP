@@ -14,7 +14,7 @@ dataArr2 = np.concatenate((totaldata2))
 print(dataArr2.shape)
 np.save("autoencoder_inputs_reg.npy",dataArr2)
 
-datainverse2=dataArr2[...,::-1]
+datainverse2 = dataArr2[...,::-1]
 print(dataArr2.shape)
 #np.save("sav1_reg.npy",dataArr2)
 print(dataArr2[0])
@@ -23,7 +23,7 @@ print(datainverse2.shape)
 #np.save("sav2_reg.npy",datainverse2)
 print(datainverse2[0])
 
-Data2=np.concatenate((datainverse2,dataArr2))
+Data2 = np.concatenate((datainverse2,dataArr2))
 print(Data2.shape)
 np.save("DATA_Regression.npy",Data2)
 

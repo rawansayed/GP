@@ -38,12 +38,14 @@ import numpy as np
 # input_data = Episgt(file_path2, num_epi_features=4, with_y=True)
 # x_2, y_2 = input_data.get_dataset()
 # X_2 = np.expand_dims(x_2, axis=2)
-# np.save("inputs_reg.npy",X_2)
-# np.save("labels_reg.npy",y_2)
+# np.save("inputs_reg.npy", X_2)
+# np.save("labels_reg.npy", y_2)
 
-#first 3 cell lines only
+
+# !!!! 3 Cell lines Only !!!!
+
 # dict = "./database/paper_data-regression/paper_data2/ontar"
-# files = ['hct116.repisgt','hek293t.repisgt','hela.repisgt']
+# files = ['hek293t.repisgt','hela.repisgt','hct116.repisgt']
 # totaldata_x = np.array([None]*3)
 # totaldata_y = np.array([None]*3)
 
@@ -58,26 +60,28 @@ import numpy as np
 # print(dataArr_x.shape)
 # dataArr_y = np.concatenate((totaldata_y))
 # print(dataArr_y.shape)
-# np.save("inputs_reg.npy",dataArr_x)
-# np.save("labels_reg.npy",dataArr_y)
+# np.save("train_reg_data/inputs_reg_hl60.npy", dataArr_x)
+# np.save("train_reg_data/labels_reg_hl60.npy", dataArr_y)
 
-dict = "./database/paper_data-regression/paper_data2/ontar"
-files = ['hl60.repisgt']
-totaldata_x = np.array([None])
-totaldata_y = np.array([None])
 
-for i in range(1):
-    path = dict+'/'+files[i]
-    input_data = Episgt(path, num_epi_features=4, with_y=True)
-    x, y = input_data.get_dataset()
-    totaldata_x[i] = np.expand_dims(x, axis=2)
-    totaldata_y[i] = np.expand_dims(y, axis=1)
+# ----------------------- Test ---------------------
+
+# dict = "./database/paper_data-regression/paper_data2/ontar"
+# files = ['hek293t.repisgt']
+# totaldata_x = np.array([None])
+# totaldata_y = np.array([None])
+
+# for i in range(1):
+#     path = dict + '/' + files[i]
+#     input_data = Episgt(path, num_epi_features = 4, with_y = True)
+#     x, y = input_data.get_dataset()
+#     totaldata_x[i] = np.expand_dims(x, axis=2)
+#     totaldata_y[i] = np.expand_dims(y, axis=1)
     
-dataArr_x = np.concatenate((totaldata_x))
-dataArr_y = np.concatenate((totaldata_y))
-print(dataArr_x.shape)
-print(dataArr_y.shape)
+# dataArr_x = np.concatenate((totaldata_x))
+# dataArr_y = np.concatenate((totaldata_y))
+# print(dataArr_x.shape)
+# print(dataArr_y.shape)
 
-np.save("inputs_test_reg.npy",dataArr_x)
-np.save("labels_test_reg.npy",dataArr_y)
-
+# np.save("test_reg_data/inputs_test_reg_hct116.npy", dataArr_x)
+# np.save("test_reg_data/labels_test_reg_hct116.npy", dataArr_y)
