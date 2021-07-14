@@ -61,7 +61,9 @@ def main():
     # model.save("./TrainingOutputs/classification/clsModel/ClassificationModel.tfl")
 
     # you can comment the tree lines above and uncomment this line so you can load your pretrained model
-    model.load("./TrainingOutputs/classification/clsModel/ClassificationModel.tfl")
+    model.load("./TrainingOutputs/classification/clsModel/thirdBestModel/ClassificationModel.tfl")
+    # model.load("./TrainingOutputs/classification/clsModel/secondBestModel/ClassificationModel.tfl")
+    # model.load("./TrainingOutputs/classification/clsModel/BestModel/ClassificationModel.tfl")
 
 
     # measuring accuracy for test data

@@ -19,13 +19,14 @@ import pandas as pd
 import numpy as np
 from tflearn import variables as vs
 from tflearn.layers.recurrent import lstm
+# from layers import augmented_conv2d
 batch_size=256
 
 
 
 
 
-def attention(inputs, attention_size,restore=True, time_major=False, return_alphas=False,name=''):
+def attention(inputs, attention_size,restore=True, time_major=False, return_alphas=False,name='',trainable=True):
     """
     Attention mechanism layer which reduces RNN/Bi-RNN outputs with Attention vector.
     The idea was proposed in the article by Z. Yang et al., "Hierarchical Attention Networks
@@ -71,58 +72,60 @@ def attention(inputs, attention_size,restore=True, time_major=False, return_alph
             `[batch_size, cell_fw.output_size + cell_bw.output_size]`.
     """
 
-    if isinstance(inputs, tuple):
-        # In case of Bi-RNN, concatenate the forward and the backward RNN outputs.
-        inputs = tf.concat(inputs, 2)
+    # if isinstance(inputs, tuple):
+    #     # In case of Bi-RNN, concatenate the forward and the backward RNN outputs.
+    #     inputs = tf.concat(inputs, 2)
 
-    if time_major:
-        # (T,B,D) => (B,T,D)
-        inputs = tf.array_ops.transpose(inputs, [1, 0, 2])
+    # if time_major:
+    #     # (T,B,D) => (B,T,D)
+    #     inputs = tf.array_ops.transpose(inputs, [1, 0, 2])
 
-    hidden_size = inputs.shape[3].value  # D value - hidden size of the RNN layer
+    # hidden_size = inputs.shape[3].value  # D value - hidden size of the RNN layer
 
-    initializer = tf.random_normal_initializer(stddev=0.1)
+    # initializer = tf.random_normal_initializer(stddev=0.1)
 
-    # Trainable parameters
-    w_omega =vs.variable(f"{name}_w_omega", shape=[hidden_size, attention_size],
-                    initializer=initializer,
-                    trainable=True, restore=restore)
-    b_omega = vs.variable(f"{name}_b_omega", shape=[attention_size],
-                    initializer=initializer,
-                    trainable=True, restore=restore)
-    u_omega = vs.variable(f"{name}_u_omega", shape=[attention_size],
-                    initializer=initializer,
-                    trainable=True, restore=restore)
+    # # Trainable parameters
+    # w_omega =vs.variable(f"{name}_w_omega", shape=[hidden_size, attention_size],
+    #                 initializer=initializer,
+    #                 trainable=trainable, restore=restore)
+    # b_omega = vs.variable(f"{name}_b_omega", shape=[attention_size],
+    #                 initializer=initializer,
+    #                 trainable=trainable, restore=restore)
+    # u_omega = vs.variable(f"{name}_u_omega", shape=[attention_size],
+    #                 initializer=initializer,
+    #                 trainable=trainable, restore=restore)
     
 
 
-    # w_omega = tf.get_variable(name=f"{name}_w_omega", shape=[hidden_size, attention_size], initializer=initializer)
-    # b_omega = tf.get_variable(name=f"{name}_b_omega", shape=[attention_size], initializer=initializer)
-    # u_omega = tf.get_variable(name=f"{name}_u_omega", shape=[attention_size], initializer=initializer)
+    # # w_omega = tf.get_variable(name=f"{name}_w_omega", shape=[hidden_size, attention_size], initializer=initializer)
+    # # b_omega = tf.get_variable(name=f"{name}_b_omega", shape=[attention_size], initializer=initializer)
+    # # u_omega = tf.get_variable(name=f"{name}_u_omega", shape=[attention_size], initializer=initializer)
 
-    with tf.name_scope(f"{name}_v"):
-        # Applying fully connected layer with non-linear activation to each of the B*T timestamps;
-        #  the shape of `v` is (B,T,D)*(D,A)=(B,T,A), where A=attention_size
-        v = tf.tanh(tf.tensordot(inputs, w_omega, axes=1) + b_omega)
+    # with tf.name_scope(f"{name}_v"):
+    #     # Applying fully connected layer with non-linear activation to each of the B*T timestamps;
+    #     #  the shape of `v` is (B,T,D)*(D,A)=(B,T,A), where A=attention_size
+    #     v = tf.tanh(tf.tensordot(inputs, w_omega, axes=1) + b_omega)
 
-    # For each of the timestamps its vector of size A from `v` is reduced with `u` vector
-    vu = tf.tensordot(v, u_omega, axes=1, name=f"{name}_vu")  # (B,T) shape
-    alphas = tf.nn.softmax(vu, name=f"{name}_alphas")         # (B,T) shape
+    # # For each of the timestamps its vector of size A from `v` is reduced with `u` vector
+    # vu = tf.tensordot(v, u_omega, axes=1, name=f"{name}_vu")  # (B,T) shape
+    # alphas = tf.nn.softmax(vu, name=f"{name}_alphas")         # (B,T) shape
 
-    # Output of (Bi-)RNN is reduced with attention vector; the result has (B,D) shape
-    # output = tf.reduce_sum(inputs * tf.expand_dims(alphas, -1), 1)
+    # # Output of (Bi-)RNN is reduced with attention vector; the result has (B,D) shape
+    # # output = tf.reduce_sum(inputs * tf.expand_dims(alphas, -1), 1)
 
-    output = tf.reduce_sum(  inputs * tf.expand_dims(alphas, -1),[])
-
-
-    if not return_alphas:
-        return output
-    else:
-        return output, alphas
+    # output = tf.reduce_sum(  inputs * tf.expand_dims(alphas, -1),[])
 
 
+    # if not return_alphas:
+    #     return output
+    # else:
+    #     return output, alphas
 
 
+
+def attention_CNN(inputs, attention_size,restore=True, time_major=False, return_alphas=False,name='',trainable=True):
+    outputs=[]
+    return outputs
 
 
 
@@ -162,11 +165,21 @@ def create_classification_model():
         # print(CLS.shape)
         # CLS=reshape(CLS,[-1,y,z,a])
 
-        CLS = attention(CLS,encoder_channel_size[i],name = f"enncoder_attention_{i}",restore = False)
+        # CLS = attention(CLS,encoder_channel_size[i],name = f"encoder_attention_{i}",trainable=False)
         
         # end each layer with relu activation layer
         CLS = activation(CLS,activation='relu', name=f'encoder_relu_{i}')
-        # CLS = dropout(CLS,1,name=f'Dropout_{i}')
+        # CLS = dropout(CLS,0.7,name=f'Dropout_{i}')
+
+
+
+    # CLS = conv_2d(CLS,256*2, [1, 3],name=f"Temp_0",restore=False)
+    # CLS = batch_normalization(CLS,decay=0,name=f"BatchNormalizeTemp_0",restore=False)
+    # CLS = activation(CLS,activation='relu', name=f'Temp_relu_0')
+
+    # CLS = conv_2d(CLS,256*4, [1, 3],name=f"Temp_1",restore=False)
+    # CLS = batch_normalization(CLS,decay=0,name=f"BatchNormalizeTemp_1",restore=False)
+    # CLS = activation(CLS,activation='relu', name=f'Temp_relu_1')
 
 
     # Classifiction Layers
@@ -192,7 +205,7 @@ def create_classification_model():
         # print(CLS.shape)
         # CLS=reshape(CLS,[-1,y,z,a])
 
-        CLS = attention(CLS,encoder_channel_size[i],name=f"cls_attention_{i}",restore = False)
+        # CLS = attention(CLS,encoder_channel_size[i],name=f"cls_attention_{i}",restore = False)
 
         #end each layer with relu activation layer
         CLS = activation(CLS,activation='relu', name=f'cls_relu_{i}')

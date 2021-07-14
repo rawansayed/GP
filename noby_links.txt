@@ -107,6 +107,8 @@ https://www.analyticsvidhya.com/blog/2020/06/auc-roc-curve-machine-learning/
 
 attention:
 https://github.com/ilivans/tf-rnn-attention/blob/master/attention.py
+https://arxiv.org/pdf/1904.09925v1.pdf
+
 
 error how to add restore variables to this function:
 https://www.tensorflow.org/guide/variable

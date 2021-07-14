@@ -50,16 +50,29 @@ def main():
     x=np.load("inputs_cls.npy")
     y=np.load("labels_cls.npy")
     x = x.transpose([0, 2, 3, 1])
-    # y=y.reshape((-1))
+    print(y.shape)
+    y=y.reshape((-1))
+    print(y.shape)
+
     # y = y.reshape([-1,1,1,1])
     # print(X[0])
     # print(X.shape)
     # print(y.shape)
 
     # Creating train and development and test data
-    X, X_test, Y, Y_test = train_test_split(x, y, test_size=0.33, random_state=42,shuffle=True)
-    X_div, X_test, Y_div, Y_test = train_test_split(X_test, Y_test, test_size=0.33, random_state=42)
-    
+    X, X_div, Y, Y_div = train_test_split(x, y, test_size=0.33, random_state=42,shuffle=True)
+    X_div, X_test, Y_div, Y_test = train_test_split(X_div, Y_div, test_size=0.33, random_state=42)
+    print(X.shape)
+    print(X_div.shape)
+    print(X_test.shape)
+    print(Y.shape)
+    print(Y_div.shape)
+    print(Y_test.shape)
+    # X_test=np.load('./inputs_test_cls.npy')
+    # X_test = X_test.transpose([0, 2, 3, 1])
+    # Y_test=np.load('./labels_test_cls.npy')
+    # Y_test=Y_test.reshape((-1))
+
     np.save('./temp/X_train.npy',X)
     np.save('./temp/X_dev.npy',X_div)
     np.save('./temp/X_test.npy',X_test)
@@ -101,6 +114,9 @@ def main():
             self.testFN = []
             self.testAUC = []
             self.WSAUC = []
+            self.maxtestAUC_first=[0]
+            self.maxtestAUC_second=[0]
+            self.maxtestAUC_third=[0]
 
         def on_epoch_end(self, training_state):
             Y_pred = model.predict(X)
@@ -150,6 +166,16 @@ def main():
             devAccuracyMesaure,
             testAccuracyMesaure)
 
+            if ((max( self.maxtestAUC_third)<test_auc_val) and((trainAccuracyMesaure-testAccuracyMesaure)<30) ):
+                model.save("./TrainingOutputs/classification/clsModel/thirdBestModel/ClassificationModel.tfl")
+                self.maxtestAUC_third.append( test_auc_val)
+            if ((max( self.maxtestAUC_second)<test_auc_val) and((trainAccuracyMesaure-testAccuracyMesaure)<20) ):
+                model.save("./TrainingOutputs/classification/clsModel/secondBestModel/ClassificationModel.tfl")
+                self.maxtestAUC_second.append( test_auc_val)
+            if ((max( self.maxtestAUC_first)<test_auc_val) and((trainAccuracyMesaure-testAccuracyMesaure)<10) ):
+                model.save("./TrainingOutputs/classification/clsModel/BestModel/ClassificationModel.tfl")
+                self.maxtestAUC_first.append( test_auc_val)
+                
             df=pd.DataFrame(
                 {
                     'training set Accuracy': self.trainAcc,
@@ -172,8 +198,8 @@ def main():
                     # 'development set True negative ratio': self.devTN,
                     # 'development set False positive ratio': self.devFP,
                     # 'development set False negative ratio': self.devFN,
-                    # 'test set True positive ratio': self.testTP,
-                    # 'test set True negative ratio': self.testTN,
+                    'test set True positive ratio': self.testTP,
+                    'test set True negative ratio': self.testTN,
                     # 'test set False positive ratio': self.testFP,
                     # 'test set False negative ratio': self.testFN,
                     'test AUC score':self.testAUC,
@@ -186,34 +212,34 @@ def main():
             df=pd.DataFrame(
                 {
                     'training set Accuracy': self.trainAcc,
-                    # 'training set Precittion': self.trainPrec,
-                    # 'training set Recall': self.trainRecall,
-                    # 'training set F1 score': self.trainF1,
+                    'training set Precittion': self.trainPrec,
+                    'training set Recall': self.trainRecall,
+                    'training set F1 score': self.trainF1,
                     'development set Accuracy': self.devAcc,
-                    # 'development set Precittion': self.devPrec,
-                    # 'development set Recall': self.devRecall,
-                    # 'development set F1 score': self.devF1,
+                    'development set Precittion': self.devPrec,
+                    'development set Recall': self.devRecall,
+                    'development set F1 score': self.devF1,
                     'test set Accuracy': self.testAcc,
-                    # 'test set Precittion': self.testPrec,
-                    # 'test set Recall': self.testRecall,
-                    # 'test set F1 score': self.testF1,
-                    # 'training set True positive ratio': self.trainTP,
-                    # 'training set True negative ratio': self.trainTN,
-                    # 'training set False positive ratio': self.trainFP,
-                    # 'training set False negative ratio': self.trainFN,
-                    # 'development set True positive ratio': self.devTP,
-                    # 'development set True negative ratio': self.devTN,
-                    # 'development set False positive ratio': self.devFP,
-                    # 'development set False negative ratio': self.devFN,
-                    # 'test set True positive ratio': self.testTP,
-                    # 'test set True negative ratio': self.testTN,
-                    # 'test set False positive ratio': self.testFP,
-                    # 'test set False negative ratio': self.testFN,
+                    'test set Precittion': self.testPrec,
+                    'test set Recall': self.testRecall,
+                    'test set F1 score': self.testF1,
+                    'training set True positive ratio': self.trainTP,
+                    'training set True negative ratio': self.trainTN,
+                    'training set False positive ratio': self.trainFP,
+                    'training set False negative ratio': self.trainFN,
+                    'development set True positive ratio': self.devTP,
+                    'development set True negative ratio': self.devTN,
+                    'development set False positive ratio': self.devFP,
+                    'development set False negative ratio': self.devFN,
+                    'test set True positive ratio': self.testTP,
+                    'test set True negative ratio': self.testTN,
+                    'test set False positive ratio': self.testFP,
+                    'test set False negative ratio': self.testFN,
                     'test AUC score':self.testAUC,
                     'whole AUC score':self.WSAUC,
 
                 })
-            df.to_csv("./TrainingOutputs/ClsAccuracies.csv")
+            df.to_csv("./TrainingOutputs/ClsAccuraciesFinal.csv")
 
             
 
@@ -232,7 +258,7 @@ def main():
     snapshot_step=1000,show_metric=True, callbacks=monitorCallback)
     
     # save the model
-    model.save("./TrainingOutputs/classification/clsModel/ClassificationModel.tfl")
+    model.save("./TrainingOutputs/classification/clsModel/finalModel/ClassificationModel.tfl")
 
     # you can comment the tree lines above and uncomment this line so you can load your pretrained model
     # model.load("./TrainingOutputs/classification/clsModel/ClassificationModel.tfl")
