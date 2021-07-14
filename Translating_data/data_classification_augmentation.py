@@ -22,6 +22,6 @@ print(datainverse.shape)
 #np.save("sav2.npy",datainverse)
 print(datainverse[0])
 
-Data=np.concatenate((datainverse,dataArr))
+Data = np.concatenate((datainverse,dataArr))
 print(Data.shape)
 np.save("DATA_Classification.npy",Data)
