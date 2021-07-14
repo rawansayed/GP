@@ -109,6 +109,15 @@ attention:
 https://github.com/ilivans/tf-rnn-attention/blob/master/attention.py
 https://arxiv.org/pdf/1904.09925v1.pdf
 
+usless attention links:
+https://github.com/gan3sh500/attention-augmented-conv
+https://github.com/keras-team/keras/blob/a5c6af3fc4bab3a1dee96860022bf4bee6780c10/keras/layers/dense_attention.py
+https://github.com/titu1994/keras-attention-augmented-convs/blob/master/attn_augconv.py
+https://www.tensorflow.org/text/tutorials/nmt_with_attention
+
+to measure accuracy "mean square error":
+https://www.geeksforgeeks.org/python-mean-squared-error/
+
 
 error how to add restore variables to this function:
 https://www.tensorflow.org/guide/variable
@@ -116,3 +125,17 @@ https://www.tensorflow.org/guide/variable
 usage:
 python3 autoEncoder.py >./testFiles/EncoderOutput.txt 2>./testFiles/EncoderError.txt
 python3 classification.py >./testFiles/ClsOutput.txt 2>./testFiles/ClsError.txt
+
+
+existing problems:
+model doesnot evaluate it self:
+Fetch argument None has invalid type <class 'NoneType'> tflearn.dnn.evaluate
+basic example for early stopping:
+https://stackoverflow.com/questions/54108317/how-to-stop-tflearn-training-epoch-or-iteration-when-it-reach-a-specific-loss-an
+to download data:
+https://www.encodeproject.org/chip-seq-matrix/?type=Experiment&replicates.library.biosample.donor.organism.scientific_name=Homo%20sapiens&assay_title=Histone%20ChIP-seq&status=released
+https://www.encodeproject.org/annotations/ENCSR943CPY/
+
+
+good links:
+https://stats.stackexchange.com/questions/352036/what-should-i-do-when-my-neural-network-doesnt-learn
