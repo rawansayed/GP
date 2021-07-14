@@ -26,46 +26,72 @@ def main():
 
     class MonitorCallback(tflearn.callbacks.Callback):
         def __init__(self):
-            self.testError =[]
-            self.trainError =[]
+            self.testError = []
+            self.trainError = []
+            self.wholeError = []
             self.testSPEAR = []
+            self.test_Pval = []
             self.WSSPEAR = []
-     
-        def on_epoch_end(self, training_state):
-            
-            pred_prob=model.predict(X_test)
-            print("test Spearman Corr value :",spearmanr(Y_test,pred_prob))
-            test_error_val=mean_squared_error(Y_test,pred_prob)
-            print("Test MSE value :",test_error_val)
-            test_SPEAR_val=spearmanr(Y_test,pred_prob)
-            self.testSPEAR.append( test_SPEAR_val)
-            self.testError.append( test_error_val)
+            self.WS_Pval = []
+            self.trainSPEAR = []
+            self.train_Pval = []
 
-            pred_prob=model.predict(x)
-            print("Whole Spearman Corr value :",spearmanr(y,pred_prob))
-            ws_SPEAR_val=spearmanr( y,pred_prob)
-            self.WSSPEAR.append( ws_SPEAR_val)
+        def on_epoch_end(self, training_state):
 
             pred_prob=model.predict(X)
+            train_SPEAR_Corrval,train_SPEAR_Pval=spearmanr(Y,pred_prob)
             train_error_val=mean_squared_error(Y,pred_prob)
-            print("Train MSE value :",train_error_val)
+            self.trainSPEAR.append( train_SPEAR_Corrval)
+            self.train_Pval.append(train_SPEAR_Pval)
             self.trainError.append(train_error_val)
+            print("Train Spearman Corr value :",train_SPEAR_Corrval)
+            print("Train MSE value :",train_error_val)
+            
+            pred_prob=model.predict(X_test)
+            test_error_val=mean_squared_error(Y_test,pred_prob)
+            test_SPEAR_Corrval,test_SPEAR_Pval=spearmanr(Y_test,pred_prob)
+            self.testSPEAR.append( test_SPEAR_Corrval)
+            self.test_Pval.append(test_SPEAR_Pval)
+            self.testError.append( test_error_val)
+            print("Test Spearman Corr value :",test_SPEAR_Corrval)
+            print("Test MSE value :",test_error_val)
+
+            pred_prob=model.predict(x)
+            ws_SPEAR_Corrval,ws_SPEAR_Pval=spearmanr( y,pred_prob)
+            whole_error_val=mean_squared_error(y,pred_prob)
+            self.WSSPEAR.append( ws_SPEAR_Corrval)
+            self.WS_Pval.append( ws_SPEAR_Pval)
+            self.wholeError.append(whole_error_val)
+            print("Whole Spearman Corr value :",ws_SPEAR_Corrval)
+            print("Whole MSE value :",whole_error_val)
+
             df=pd.DataFrame(
                 {
-                    'test SPEAR score':self.testSPEAR,
-                    'whole SPEAR score':self.WSSPEAR,
-                    'test ERROR score':self.testError,
-                    'train ERROR score':self.trainError,
+                    'Train SPEAR CORR score':self.trainSPEAR,
+                    'Train SPEAR Pval score':self.train_Pval,
+                    'Test SPEAR CORR score':self.testSPEAR,
+                    'Test SPEAR Pval score':self.test_Pval,
+                    'Whole SPEAR CORR score':self.WSSPEAR,
+                    'Whole SPEAR Pval score':self.WS_Pval,
+                    'Test ERROR score':self.testError,
+                    'Train ERROR score':self.trainError,
+                    'Whole ERROR score':self.wholeError
+
                 })
             df.to_csv("./TrainingOutputs/REGAccuracies.csv")
 
         def on_train_end(self,training_state):
             df=pd.DataFrame(
                 {
-                    'test SPEAR score':self.testSPEAR,
-                    'whole SPEAR score':self.WSSPEAR,
-                    'test ERROR score':self.testError,
-                    'train ERROR score':self.trainError,
+                    'Train SPEAR CORR score':self.trainSPEAR,
+                    'Train SPEAR Pval score':self.train_Pval,
+                    'Test SPEAR CORR score':self.testSPEAR,
+                    'Test SPEAR Pval score':self.test_Pval,
+                    'Whole SPEAR CORR score':self.WSSPEAR,
+                    'Whole SPEAR Pval score':self.WS_Pval,
+                    'Test ERROR score':self.testError,
+                    'Train ERROR score':self.trainError,
+                    'Whole ERROR score':self.wholeError
                 })
             df.to_csv("./TrainingOutputs/REGAccuracies.csv")
       
