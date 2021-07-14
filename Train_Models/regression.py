@@ -12,16 +12,16 @@ batch_size=256
 
 def main():
     # loading data
-    x = np.load("inputs_reg.npy")
-    y = np.load("labels_reg.npy")
+    x = np.load("train_reg_data/inputs_reg_hct116.npy")
+    y = np.load("train_reg_data/labels_reg_hct116.npy")
     x = x.transpose([0, 2, 3, 1])
     y = y.reshape((-1))
     # Creating train and development and test data
     X, X_div, Y, Y_div = train_test_split(x, y, test_size=0.33, random_state=42,shuffle=True)
     # X_div, X_test, Y_div, Y_test = train_test_split(X_div, Y_div, test_size=0.33, random_state=42)
-    X_test = np.load('./inputs_test_reg.npy')
+    X_test = np.load("test_reg_data/inputs_test_reg_hct116.npy")
     X_test = X_test.transpose([0, 2, 3, 1])
-    Y_test = np.load('./labels_test_reg.npy')
+    Y_test = np.load("test_reg_data/labels_test_reg_hct116.npy")
     Y_test = Y_test.reshape((-1))
 
     class MonitorCallback(tflearn.callbacks.Callback):
@@ -77,7 +77,7 @@ def main():
                     'Train ERROR score':self.trainError,
                     'Whole ERROR score':self.wholeError
                 })
-            df.to_csv("./TrainingOutputs/REGAccuracies.csv")
+            df.to_csv("./TrainingOutputs/REGAccuracies_hct116-without dropout-.csv")
 
         def on_train_end(self,training_state):
             df=pd.DataFrame(
@@ -92,7 +92,7 @@ def main():
                     'Train ERROR score':self.trainError,
                     'Whole ERROR score':self.wholeError
                 })
-            df.to_csv("./TrainingOutputs/REGAccuracies.csv")
+            df.to_csv("./TrainingOutputs/REGAccuracies_hct116-without dropout-.csv")
       
     # create model from classification
     model = create_regression_model()
