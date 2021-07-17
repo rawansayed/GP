@@ -10,3 +10,5 @@ dist
 CP
 venv
 testFiles
+checkpoints
+

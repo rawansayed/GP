@@ -1,0 +1,70 @@
+shape of dataArr_CLS (16749, 8, 1, 23)
+shape of dataArr_REG (18982, 8, 1, 23)
+shape of Data_encoder (35731, 8, 1, 23)
+shape of Data_encoder (35731, 8, 1, 23)
+shape of Data_encoder_inverse (35731, 8, 1, 23)
+first element of Data_encoder
+[[[1. 0. 0. 0. 0. 1. 0. 0. 1. 0. 0. 0. 0. 0. 1. 0. 0. 0. 0. 1. 0. 0. 0.]]
+
+ [[0. 1. 0. 0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1. 0. 0. 0. 0.]]
+
+ [[0. 0. 1. 0. 0. 0. 1. 0. 0. 1. 0. 0. 0. 1. 0. 0. 1. 1. 0. 0. 0. 1. 1.]]
+
+ [[0. 0. 0. 1. 1. 0. 0. 0. 0. 0. 1. 1. 1. 0. 0. 1. 0. 0. 0. 0. 1. 0. 0.]]
+
+ [[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]]
+
+ [[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]]
+
+ [[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]]
+
+ [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]]]
+first element of Data_encoder_inverse
+[[[0. 0. 0. 1. 0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 1. 0. 0. 1. 0. 0. 0. 0. 1.]]
+
+ [[0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 1. 0.]]
+
+ [[1. 1. 0. 0. 0. 1. 1. 0. 0. 1. 0. 0. 0. 1. 0. 0. 1. 0. 0. 0. 1. 0. 0.]]
+
+ [[0. 0. 1. 0. 0. 0. 0. 1. 0. 0. 1. 1. 1. 0. 0. 0. 0. 0. 1. 1. 0. 0. 0.]]
+
+ [[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]]
+
+ [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]]
+
+ [[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]]
+
+ [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]]]
+shape of Data_aug (71462, 8, 1, 23)
+shape of inputs_hek293t_doench_CLS (1866, 8, 1, 23)
+shape of inputs_hek293t_doench_test_CLS (467, 8, 1, 23)
+shape of labels_hek293t_doench_CLS (1866, 1)
+shape of labels_hek293t_doench_test_CLS (467, 1)
+shape of inputs_hct116_hart_CLS (3391, 8, 1, 23)
+shape of inputs_hct116_hart_test_CLS (848, 8, 1, 23)
+shape of labels_hct116_hart_CLS (3391, 1)
+shape of labels_hct116_hart_test_CLS (848, 1)
+shape of inputs_hl60_xu_CLS (1660, 8, 1, 23)
+shape of inputs_hl60_xu_test_CLS (416, 8, 1, 23)
+shape of labels_hl60_xu_CLS (1660, 1)
+shape of labels_hl60_xu_test_CLS (416, 1)
+shape of inputs_hela_hart_CLS (6480, 8, 1, 23)
+shape of inputs_hela_hart_test_CLS (1621, 8, 1, 23)
+shape of labels_hela_hart_CLS (6480, 1)
+shape of labels_hela_hart_test_CLS (1621, 1)
+shape of inputs_hek293t_REG (3652, 8, 1, 23)
+shape of inputs_hek293t_test_REG (914, 8, 1, 23)
+shape of labels_hek293t_REG (3652, 1)
+shape of labels_hek293t_test_REG (914, 1)
+shape of inputs_hela_REG (6480, 8, 1, 23)
+shape of inputs_hela_test_REG (1621, 8, 1, 23)
+shape of labels_hela_REG (6480, 1)
+shape of labels_hela_test_REG (1621, 1)
+shape of inputs_hct116_REG (3391, 8, 1, 23)
+shape of inputs_hct116_test_REG (848, 8, 1, 23)
+shape of labels_hct116_REG (3391, 1)
+shape of labels_hct116_test_REG (848, 1)
+shape of inputs_hek293t_REG (3652, 8, 1, 23)
+shape of inputs_hek293t_test_REG (914, 8, 1, 23)
+shape of labels_hek293t_REG (3652, 1)
+shape of labels_hek293t_test_REG (914, 1)

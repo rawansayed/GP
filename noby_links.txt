@@ -132,6 +132,7 @@ model doesnot evaluate it self:
 Fetch argument None has invalid type <class 'NoneType'> tflearn.dnn.evaluate
 basic example for early stopping:
 https://stackoverflow.com/questions/54108317/how-to-stop-tflearn-training-epoch-or-iteration-when-it-reach-a-specific-loss-an
+http://mckinziebrandon.me/TensorflowNotebooks/2016/11/20/early-stopping.html
 to download data:
 https://www.encodeproject.org/chip-seq-matrix/?type=Experiment&replicates.library.biosample.donor.organism.scientific_name=Homo%20sapiens&assay_title=Histone%20ChIP-seq&status=released
 https://www.encodeproject.org/annotations/ENCSR943CPY/
