@@ -3,7 +3,7 @@ from numpy.lib.npyio import save
 import tensorflow.compat.v1 as tf
 # tf.enable_eager_execution()
 import tflearn
-from Build_Models.classification import create_classification_model
+from scenario1.Build_Models.classification import create_classification_model
 from sklearn.model_selection import train_test_split
 import pandas as pd 
 import numpy as np
@@ -50,21 +50,22 @@ def accuracyForCLSMODEL(X_pred,Y_true,lowThresh,highThresh):
     FN=FN/Y_true.shape[0]
     return AccuracyMesaure*100 ,TP*100 ,TN*100 ,FP*100 ,FN*100 ,Precition*100 ,Recall*100 ,F1*100 
 
-# 
+# --------------- creating a function to save roc curve for every best model --------------- #
 def createROCCurve(model,X_test,Y_test,model_name):
     PredProb=model.predict(X_test)
     fpr,tpr, thresh1 =roc_curve(Y_test,PredProb)
-    np.save(f"{save_location}/statistical_measures/fpr_{model_name}.npy")
-    np.save(f"{save_location}/statistical_measures/tpr_{model_name}.npy")
+    np.save(f"{save_location}/statistical_measures/fpr_{model_name}.npy",fpr)
+    np.save(f"{save_location}/statistical_measures/tpr_{model_name}.npy",tpr)
     plt.plot(fpr, tpr, linestyle='--', color='blue')
     plt.title('ROC curve')
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive rate')
     plt.legend(loc='best')
     plt.savefig(f"{save_location}/statistical_measures/ROCfor{model_name}",dpi=300)
+    plt.close() 
 
 
-def main():
+def scenario1():
 
     # --------------- loading Data --------------- #
     files = ['hek293t_doench.episgt','hct116_hart.episgt','hl60_xu.episgt','hela_hart.episgt']
@@ -92,6 +93,20 @@ def main():
     dataArr_inputs_test      = np.concatenate((dataArr_inputs_test))
     dataArr_labels_train     = np.concatenate((dataArr_labels_train))
     dataArr_labels_test      = np.concatenate((dataArr_labels_test))
+    
+    dataArr_inputs_test_hek293t=np.load(f"./training_data/inputs_hek293t_doench_test_CLS.npy")
+    dataArr_labels_test_hek293t=np.load(f"./training_data/labels_hek293t_doench_test_CLS.npy")
+
+    dataArr_inputs_test_hct116=np.load(f"./training_data/inputs_hct116_hart_test_CLS.npy")
+    dataArr_labels_test_hct116=np.load(f"./training_data/labels_hct116_hart_test_CLS.npy")
+
+    dataArr_inputs_test_hl60=np.load(f"./training_data/inputs_hl60_xu_test_CLS.npy")
+    dataArr_labels_test_hl60=np.load(f"./training_data/labels_hl60_xu_test_CLS.npy")
+
+    dataArr_inputs_test_hela=np.load(f"./training_data/inputs_hela_hart_test_CLS.npy")
+    dataArr_labels_test_hela=np.load(f"./training_data/labels_hela_hart_test_CLS.npy")
+
+
 
     # Checking the dimensions
     print("loaded data dimention check")
@@ -116,7 +131,7 @@ def main():
     print("shape of dataArr_labels_test",dataArr_labels_test.shape)
 
     # Creating train and development datasets and rename the test dataset
-    X_train, X_dev, Y_train, Y_dev = train_test_split(dataArr_inputs_train, dataArr_labels_train, test_size=0.15, random_state=42,shuffle=True)
+    X_train, X_dev, Y_train, Y_dev = train_test_split(dataArr_inputs_train, dataArr_labels_train, test_size=0.30, random_state=42,shuffle=True)
     X_test=dataArr_inputs_test
     Y_test=dataArr_labels_test
     
@@ -167,6 +182,11 @@ def main():
             self.maxtestAUC_second=[0]
             self.maxtestAUC_third=[0]
             self.loss=[]
+            self.hekAUC=[]
+            self.hctAUC=[]
+            self.hlAUC=[]
+            self.helaAUC=[]
+
 
         def on_epoch_end(self, training_state):
 
@@ -215,6 +235,22 @@ def main():
             ws_auc_val=roc_auc_score(Y_whole_set, pred_prob)
             print("whole AUC value :",ws_auc_val)
             self.WSAUC.append( ws_auc_val)
+
+            pred_prob=model.predict(dataArr_inputs_test_hek293t)
+            hek_auc_val=roc_auc_score(dataArr_labels_test_hek293t, pred_prob)
+            self.hekAUC.append( hek_auc_val)
+
+            pred_prob=model.predict(dataArr_inputs_test_hct116)
+            hct_auc_val=roc_auc_score(dataArr_labels_test_hct116, pred_prob)
+            self.hctAUC.append( hct_auc_val)
+
+            pred_prob=model.predict(dataArr_inputs_test_hl60)
+            hl_auc_val=roc_auc_score(dataArr_labels_test_hl60, pred_prob)
+            self.hlAUC.append( hl_auc_val)
+
+            pred_prob=model.predict(dataArr_inputs_test_hela)
+            hela_auc_val=roc_auc_score(dataArr_labels_test_hela, pred_prob)
+            self.helaAUC.append( hela_auc_val)
 
             print(
                 "train Acc",trainAccuracyMesaure,
@@ -273,6 +309,7 @@ def main():
                     # 'test set False negative ratio': self.testFN,
                     'test AUC score':self.testAUC,
                     # 'whole AUC score':self.WSAUC,
+                    'loss':self.loss,
 
                 })
             df.to_csv(f"{save_location}/statistical_measures/ClsAccuracies.csv")
@@ -307,6 +344,11 @@ def main():
                     'test set False negative ratio': self.testFN,
                     'test AUC score':self.testAUC,
                     'whole AUC score':self.WSAUC,
+                    'loss':self.loss,
+                    'hek293 AUC score':self.hekAUC,
+                    'hct116 AUC score':self.hctAUC,
+                    'hela AUC score':self.helaAUC,
+                    'hl60 AUC score':self.hlAUC,
 
                 })
             df.to_csv(f"{save_location}/statistical_measures/ClsAccuraciesFinal.csv")
@@ -352,4 +394,4 @@ def main():
     )
 
     
-main()
+# scenario1()
