@@ -50,6 +50,18 @@ def accuracyForCLSMODEL(X_pred,Y_true,lowThresh,highThresh):
     FN=FN/Y_true.shape[0]
     return AccuracyMesaure*100 ,TP*100 ,TN*100 ,FP*100 ,FN*100 ,Precition*100 ,Recall*100 ,F1*100 
 
+# 
+def createROCCurve(model,X_test,Y_test,model_name):
+    PredProb=model.predict(X_test)
+    fpr,tpr, thresh1 =roc_curve(Y_test,PredProb)
+    np.save(f"{save_location}/statistical_measures/fpr_{model_name}.npy")
+    np.save(f"{save_location}/statistical_measures/tpr_{model_name}.npy")
+    plt.plot(fpr, tpr, linestyle='--', color='blue')
+    plt.title('ROC curve')
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive rate')
+    plt.legend(loc='best')
+    plt.savefig(f"{save_location}/statistical_measures/ROCfor{model_name}",dpi=300)
 
 
 def main():
@@ -155,12 +167,6 @@ def main():
             self.maxtestAUC_second=[0]
             self.maxtestAUC_third=[0]
             self.loss=[]
-            self.fprThirdBest=np.array([None])
-            self.fprSecondBest=np.array([None])
-            self.fprBest=np.array([None])
-            self.tprThirdBest=np.array([None])
-            self.tprSecondBest=np.array([None])
-            self.tprBest=np.array([None])
 
         def on_epoch_end(self, training_state):
 
@@ -223,36 +229,19 @@ def main():
             if ((max( self.maxtestAUC_third)<test_auc_val) and((trainAccuracyMesaure-testAccuracyMesaure)<30) ):
                 model.save(f"{save_location}/clsModel/thirdBestModel/ClassificationModel.tfl")
                 self.maxtestAUC_third.append( test_auc_val)
-                PredProb=model.predict(X_test)
-                self.fprThirdBest,self.tprThirdBest, thresh1 =roc_curve(Y_test,pred_prob)
-                np.save(f"{save_location}/statistical_measures/fprThirdBest.npy",self.fprThirdBest)
-                np.save(f"{save_location}/statistical_measures/tprThirdBest.npy",self.tprThirdBest)
-                plt.plot(p_fpr, p_tpr, linestyle='--', color='blue')
-                # title
-                plt.title('ROC curve')
-                # x label
-                plt.xlabel('False Positive Rate')
-                # y label
-                plt.ylabel('True Positive rate')
-
-                plt.legend(loc='best')
-                plt.savefig('ROC',dpi=300)
+                createROCCurve(model,X_test,Y_test,"ThirdBest")
+                
             # here the second best model with the best AUC we found and 20% overfitting
             if ((max( self.maxtestAUC_second)<test_auc_val) and((trainAccuracyMesaure-testAccuracyMesaure)<20) ):
                 model.save(f"{save_location}/clsModel/secondBestModel/ClassificationModel.tfl")
                 self.maxtestAUC_second.append( test_auc_val)
-                PredProb=model.predict(X_test)
-                self.fprSecondBest,self.tprSecondBest, thresh1 =roc_curve(Y_test,pred_prob)
-                np.save(f"{save_location}/statistical_measures/fprSecondBest.npy",self.fprSecondBest)
-                np.save(f"{save_location}/statistical_measures/tprSecondBest.npy",self.tprSecondBest)
+                createROCCurve(model,X_test,Y_test,"SecondBest")
+
             # here the best model with the best AUC we found and 10% overfitting
             if ((max( self.maxtestAUC_first)<test_auc_val) and((trainAccuracyMesaure-testAccuracyMesaure)<10) ):
                 model.save(f"{save_location}/clsModel/BestModel/ClassificationModel.tfl")
                 self.maxtestAUC_first.append( test_auc_val)
-                PredProb=model.predict(X_test)
-                self.fprBest,self.tprBest, thresh1 =roc_curve(Y_test,pred_prob)
-                np.save(f"{save_location}/statistical_measures/fprBest.npy",self.fprBest)
-                np.save(f"{save_location}/statistical_measures/tprBest.npy",self.tprBest)
+                createROCCurve(model,X_test,Y_test,"BestModel")
                 
             
             # saving the important statistical measures every epoch
