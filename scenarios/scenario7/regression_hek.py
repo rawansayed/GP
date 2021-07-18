@@ -269,4 +269,4 @@ def scenario6(epochNum):
     # save the model
     model.save(f"{save_location}/regModel/hek/finalModel/RegressionModel.tfl")
 
-scenario6(2)
+scenario6(75)

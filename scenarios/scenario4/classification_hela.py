@@ -408,5 +408,5 @@ def scenario4_hela(epochNum):
     )
 
 
-scenario4_hela(2)
+scenario4_hela(75)
 

@@ -267,4 +267,4 @@ def scenario7_hct(epochNum):
     # save the model
     model.save(f"{save_location}/regModel/hct/finalModel/RegressionModel.tfl")
 
-scenario7_hct(2)
+scenario7_hct(75)

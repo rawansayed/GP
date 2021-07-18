@@ -406,4 +406,4 @@ def scenario1(epochNum):
     )
 
     
-scenario1(2)
+scenario1(75)

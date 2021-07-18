@@ -408,5 +408,5 @@ def scenario4_hct(epochNum):
     )
 
 
-scenario4_hct(2)
+scenario4_hct(75)
 
