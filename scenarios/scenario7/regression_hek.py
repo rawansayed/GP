@@ -197,7 +197,7 @@ def scenario6(epochNum):
             
             # # Some logic to save the best model and calculate the roc curve for it
             # here the third best model with the best spearman corr we found and any overfitting
-            if ((max(abs( self.maxtestSP_second))<abs(test_SPEAR_Corrval))):
+            if ((abs(max( self.maxtestSP_second))<abs(test_SPEAR_Corrval))):
                 model.save(f"{save_location}/regModel/hek/BestModel/ClassificationModel.tfl")
                 self.maxtestSP_second.append( test_SPEAR_Corrval)
 
