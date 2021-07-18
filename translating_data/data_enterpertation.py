@@ -84,7 +84,7 @@ for i in range(4):
 # # ------------- For Regression ------------- #
 
 dict    =   "./database/paper_data-regression/paper_data2/ontar"
-files   =   ['hek293t.repisgt','hela.repisgt','hct116.repisgt','hek293t.repisgt']
+files   =   ['hek293t.repisgt','hela.repisgt','hct116.repisgt','hl60.repisgt']
 totaldata_inputs     =   np.array([None])
 totaldata_labels     =   np.array([None])
 dataArr_inputs_train =   np.array([None])

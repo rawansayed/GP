@@ -1,4 +1,5 @@
 from numpy.core.fromnumeric import reshape
+from numpy.lib.npyio import save
 import tensorflow.compat.v1 as tf
 # tf.enable_eager_execution()
 import tflearn
@@ -7,9 +8,15 @@ from sklearn.model_selection import train_test_split
 import pandas as pd 
 import numpy as np
 batch_size=256
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_auc_score,roc_curve
+import matplotlib.pyplot as plt
+import os
 
+# --------------- loading the location where we will save data into --------------- #
+save_location=__file__[:__file__.rindex("/")]
+print(save_location)
 
+# --------------- creating a function to measure statistical measurments --------------- #
 def accuracyForCLSMODEL(X_pred,Y_true,lowThresh,highThresh):
 
     for i in range(len(X_pred)):
@@ -43,51 +50,118 @@ def accuracyForCLSMODEL(X_pred,Y_true,lowThresh,highThresh):
     FN=FN/Y_true.shape[0]
     return AccuracyMesaure*100 ,TP*100 ,TN*100 ,FP*100 ,FN*100 ,Precition*100 ,Recall*100 ,F1*100 
 
+# --------------- creating a function to save roc curve for every best model --------------- #
+def createROCCurve(model,X_test,Y_test,model_name):
+    PredProb=model.predict(X_test)
+    fpr,tpr, thresh1 =roc_curve(Y_test,PredProb)
+    np.save(f"{save_location}/statistical_measures/fpr_{model_name}.npy",fpr)
+    np.save(f"{save_location}/statistical_measures/tpr_{model_name}.npy",tpr)
+    plt.plot(fpr, tpr, linestyle='--', color='blue')
+    plt.title('ROC curve')
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive rate')
+    plt.legend(loc='best')
+    plt.savefig(f"{save_location}/statistical_measures/ROCfor{model_name}",dpi=300)
+    plt.close() 
 
 
-def main():
-    # loading data
-    x=np.load("inputs_cls.npy")
-    y=np.load("labels_cls.npy")
-    x = x.transpose([0, 2, 3, 1])
-    print(y.shape)
-    y=y.reshape((-1))
-    print(y.shape)
+def scenario2(epochNum):
 
-    # y = y.reshape([-1,1,1,1])
-    # print(X[0])
-    # print(X.shape)
-    # print(y.shape)
+    # --------------- loading Data --------------- #
+    files = ['hek293t_doench.episgt','hct116_hart.episgt','hl60_xu.episgt','hela_hart.episgt']
 
-    # Creating train and development and test data
-    X, X_div, Y, Y_div = train_test_split(x, y, test_size=0.33, random_state=42,shuffle=True)
-    X_div, X_test, Y_div, Y_test = train_test_split(X_div, Y_div, test_size=0.33, random_state=42)
-    print(X.shape)
-    print(X_div.shape)
-    print(X_test.shape)
-    print(Y.shape)
-    print(Y_div.shape)
-    print(Y_test.shape)
-    # X_test=np.load('./inputs_test_cls.npy')
-    # X_test = X_test.transpose([0, 2, 3, 1])
-    # Y_test=np.load('./labels_test_cls.npy')
-    # Y_test=Y_test.reshape((-1))
+    dataArr_inputs_train =   np.array([None]*4)
+    dataArr_inputs_test  =   np.array([None]*4)
+    dataArr_labels_train =   np.array([None]*4)
+    dataArr_labels_test  =   np.array([None]*4)
 
-    np.save('./temp/X_train.npy',X)
-    np.save('./temp/X_dev.npy',X_div)
-    np.save('./temp/X_test.npy',X_test)
-    np.save('./temp/y_train.npy',Y)
-    np.save('./temp/y_dev.npy',Y_div)
-    np.save('./temp/y_test.npy',Y_test)
-    # print(X_div.shape)
-    # print(Y_div.shape)
-    # print(X_test.shape)
-    # print(Y_test.shape)
-    # Y=Y.reshape([-1,])
-    # Y_test=Y_test.reshape([-1,]) 
+    # loading every piece in one big data
+    for i in range(4):
+        files[i]=files[i][:files[i].index('.')]
+        x=np.load(f"./training_data/inputs_{files[i]}_CLS.npy" )
+        dataArr_inputs_train[i]    =   x
+        x=np.load(f"./training_data/inputs_{files[i]}_test_CLS.npy")
+        dataArr_inputs_test[i]     =   x
+        x=np.load(f"./training_data/labels_{files[i]}_CLS.npy")
+        dataArr_labels_train[i]    =   x
+        x=np.load(f"./training_data/labels_{files[i]}_test_CLS.npy")
+        dataArr_labels_test[i]     =   x
     
+    # concatente the array of 4 to get one array 
+
+    dataArr_inputs_train     = np.concatenate((dataArr_inputs_train))
+    dataArr_inputs_test      = np.concatenate((dataArr_inputs_test))
+    dataArr_labels_train     = np.concatenate((dataArr_labels_train))
+    dataArr_labels_test      = np.concatenate((dataArr_labels_test))
+
+    # loading every piece on its own
+    
+    dataArr_inputs_test_hek293t=np.load(f"./training_data/inputs_hek293t_doench_test_CLS.npy")
+    dataArr_labels_test_hek293t=np.load(f"./training_data/labels_hek293t_doench_test_CLS.npy")
+
+    dataArr_inputs_test_hct116=np.load(f"./training_data/inputs_hct116_hart_test_CLS.npy")
+    dataArr_labels_test_hct116=np.load(f"./training_data/labels_hct116_hart_test_CLS.npy")
+
+    dataArr_inputs_test_hl60=np.load(f"./training_data/inputs_hl60_xu_test_CLS.npy")
+    dataArr_labels_test_hl60=np.load(f"./training_data/labels_hl60_xu_test_CLS.npy")
+    
+    dataArr_inputs_test_hela=np.load(f"./training_data/inputs_hela_hart_test_CLS.npy")
+    dataArr_labels_test_hela=np.load(f"./training_data/labels_hela_hart_test_CLS.npy")
+
+
+
+    # Checking the dimensions
+    print("loaded data dimention check")
+    print("shape of dataArr_inputs_train",dataArr_inputs_train.shape)   
+    print("shape of dataArr_inputs_test",dataArr_inputs_test.shape)    
+    print("shape of dataArr_labels_train",dataArr_labels_train.shape)   
+    print("shape of dataArr_labels_test",dataArr_labels_test.shape)
+    
+
+    # Reshaping the arrays
+    dataArr_inputs_train = dataArr_inputs_train.transpose([0, 2, 3, 1])
+    dataArr_inputs_test = dataArr_inputs_test.transpose([0, 2, 3, 1])
+    dataArr_inputs_test_hek293t=dataArr_inputs_test_hek293t.transpose([0, 2, 3, 1])
+    dataArr_inputs_test_hct116=dataArr_inputs_test_hct116.transpose([0, 2, 3, 1])
+    dataArr_inputs_test_hl60=dataArr_inputs_test_hl60.transpose([0, 2, 3, 1])
+    dataArr_inputs_test_hela=dataArr_inputs_test_hela.transpose([0, 2, 3, 1])
+
+    dataArr_labels_train=dataArr_labels_train.reshape((-1))
+    dataArr_labels_test=dataArr_labels_test.reshape((-1))
+    dataArr_labels_test_hek293t=dataArr_labels_test_hek293t.reshape((-1))
+    dataArr_labels_test_hct116=dataArr_labels_test_hct116.reshape((-1))
+    dataArr_labels_test_hl60=dataArr_labels_test_hl60.reshape((-1))
+    dataArr_labels_test_hela=dataArr_labels_test_hela.reshape((-1))
+
+    # Checking the dimensions
+    print("loaded data dimensions recheck")
+    print("shape of dataArr_inputs_train",dataArr_inputs_train.shape)   
+    print("shape of dataArr_inputs_test",dataArr_inputs_test.shape)    
+    print("shape of dataArr_labels_train",dataArr_labels_train.shape)   
+    print("shape of dataArr_labels_test",dataArr_labels_test.shape)
+
+    # Creating train and development datasets and rename the test dataset
+    X_train, X_dev, Y_train, Y_dev = train_test_split(dataArr_inputs_train, dataArr_labels_train, test_size=0.30, random_state=42,shuffle=True)
+    X_test=dataArr_inputs_test
+    Y_test=dataArr_labels_test
+    
+    X_whole_set=np.concatenate((X_train,X_dev,X_test))
+    Y_whole_set=np.concatenate((Y_train,Y_dev,Y_test))
+
+    print("training data dimensions check")
+    print(X_train.shape)
+    print(X_dev.shape)
+    print(X_test.shape)
+    print(Y_train.shape)
+    print(Y_dev.shape)
+    print(Y_test.shape)
+    
+    # --------------- Creating Call back function --------------- #
+
+    # this class will compute statistical measures and save them
     class MonitorCallback(tflearn.callbacks.Callback):
         def __init__(self):
+            # initialize arrays that will save statistical measuresevery epoch
             self.trainAcc = []
             self.trainPrec = []
             self.trainRecall = []
@@ -117,10 +191,18 @@ def main():
             self.maxtestAUC_first=[0]
             self.maxtestAUC_second=[0]
             self.maxtestAUC_third=[0]
+            self.loss=[]
+            self.hekAUC=[]
+            self.hctAUC=[]
+            self.hlAUC=[]
+            self.helaAUC=[]
+
 
         def on_epoch_end(self, training_state):
-            Y_pred = model.predict(X)
-            trainAccuracyMesaure ,trainTP,trainTN,trainFP,trainFN,trainPrecition,trainRecall,trainF1 = accuracyForCLSMODEL(Y_pred,Y,0.5,0.5)
+
+            # compute statistical measures for X_train X_dev and X_test
+            Y_pred = model.predict(X_train)
+            trainAccuracyMesaure ,trainTP,trainTN,trainFP,trainFN,trainPrecition,trainRecall,trainF1 = accuracyForCLSMODEL(Y_pred,Y_train,0.5,0.5)
             self.trainAcc.append( trainAccuracyMesaure)
             self.trainPrec.append(trainPrecition)
             self.trainRecall.append(trainRecall)
@@ -130,8 +212,8 @@ def main():
             self.trainFP.append( trainFP)
             self.trainFN.append( trainFN)
 
-            Y_pred_div = model.predict(X_div)
-            devAccuracyMesaure ,devTP,devTN,devFP,devFN,devPrecition,devRecall,devF1 = accuracyForCLSMODEL(Y_pred_div,Y_div,0.5,0.5)
+            Y_pred_div = model.predict(X_dev)
+            devAccuracyMesaure ,devTP,devTN,devFP,devFN,devPrecition,devRecall,devF1 = accuracyForCLSMODEL(Y_pred_div,Y_dev,0.5,0.5)
             self.devAcc.append( devAccuracyMesaure)
             self.devPrec.append( devPrecition)
             self.devRecall.append( devRecall)
@@ -152,30 +234,63 @@ def main():
             self.testFP.append( testFP)
             self.testFN.append( testFN)
 
+            # Compute AUC value for X_test and the whole set
+
             pred_prob=model.predict(X_test)
             test_auc_val=roc_auc_score(Y_test, pred_prob)
             print("test AUC value :",test_auc_val)
             self.testAUC.append( test_auc_val)
 
-            pred_prob=model.predict(x)
-            ws_auc_val=roc_auc_score(y, pred_prob)
+            pred_prob=model.predict(X_whole_set)
+            ws_auc_val=roc_auc_score(Y_whole_set, pred_prob)
             print("whole AUC value :",ws_auc_val)
             self.WSAUC.append( ws_auc_val)
 
-            print(trainAccuracyMesaure,
-            devAccuracyMesaure,
-            testAccuracyMesaure)
+            pred_prob=model.predict(dataArr_inputs_test_hek293t)
+            hek_auc_val=roc_auc_score(dataArr_labels_test_hek293t, pred_prob)
+            self.hekAUC.append( hek_auc_val)
 
+            pred_prob=model.predict(dataArr_inputs_test_hct116)
+            hct_auc_val=roc_auc_score(dataArr_labels_test_hct116, pred_prob)
+            self.hctAUC.append( hct_auc_val)
+
+            pred_prob=model.predict(dataArr_inputs_test_hl60)
+            hl_auc_val=roc_auc_score(dataArr_labels_test_hl60, pred_prob)
+            self.hlAUC.append( hl_auc_val)
+
+            pred_prob=model.predict(dataArr_inputs_test_hela)
+            hela_auc_val=roc_auc_score(dataArr_labels_test_hela, pred_prob)
+            self.helaAUC.append( hela_auc_val)
+
+            print(
+                "train Acc",trainAccuracyMesaure,
+                "dev Acc",devAccuracyMesaure,
+                "test Acc",testAccuracyMesaure
+            )
+            # # append loss
+            self.loss.append(training_state.loss_value)
+
+            # # Some logic to save the best model and calculate the roc curve for it
+            # here the third best model with the best AUC we found and 30% overfitting
             if ((max( self.maxtestAUC_third)<test_auc_val) and((trainAccuracyMesaure-testAccuracyMesaure)<30) ):
-                model.save("./TrainingOutputs/classification/clsModel/thirdBestModel/ClassificationModel.tfl")
+                model.save(f"{save_location}/clsModel/thirdBestModel/ClassificationModel.tfl")
                 self.maxtestAUC_third.append( test_auc_val)
-            if ((max( self.maxtestAUC_second)<test_auc_val) and((trainAccuracyMesaure-testAccuracyMesaure)<20) ):
-                model.save("./TrainingOutputs/classification/clsModel/secondBestModel/ClassificationModel.tfl")
-                self.maxtestAUC_second.append( test_auc_val)
-            if ((max( self.maxtestAUC_first)<test_auc_val) and((trainAccuracyMesaure-testAccuracyMesaure)<10) ):
-                model.save("./TrainingOutputs/classification/clsModel/BestModel/ClassificationModel.tfl")
-                self.maxtestAUC_first.append( test_auc_val)
+                createROCCurve(model,X_test,Y_test,"ThirdBest")
                 
+            # here the second best model with the best AUC we found and 20% overfitting
+            if ((max( self.maxtestAUC_second)<test_auc_val) and((trainAccuracyMesaure-testAccuracyMesaure)<20) ):
+                model.save(f"{save_location}/clsModel/secondBestModel/ClassificationModel.tfl")
+                self.maxtestAUC_second.append( test_auc_val)
+                createROCCurve(model,X_test,Y_test,"SecondBest")
+
+            # here the best model with the best AUC we found and 10% overfitting
+            if ((max( self.maxtestAUC_first)<test_auc_val) and((trainAccuracyMesaure-testAccuracyMesaure)<10) ):
+                model.save(f"{save_location}/clsModel/BestModel/ClassificationModel.tfl")
+                self.maxtestAUC_first.append( test_auc_val)
+                createROCCurve(model,X_test,Y_test,"BestModel")
+                
+            
+            # saving the important statistical measures every epoch
             df=pd.DataFrame(
                 {
                     'training set Accuracy': self.trainAcc,
@@ -204,11 +319,15 @@ def main():
                     # 'test set False negative ratio': self.testFN,
                     'test AUC score':self.testAUC,
                     # 'whole AUC score':self.WSAUC,
+                    'loss':self.loss,
 
                 })
-            df.to_csv("./TrainingOutputs/ClsAccuracies.csv")
+            df.to_csv(f"{save_location}/statistical_measures/ClsAccuracies.csv")
 
         def on_train_end(self,training_state):
+            print(self.loss.__len__())
+            print(self.hlAUC.__len__())
+            # saving all statistical measures when training ends
             df=pd.DataFrame(
                 {
                     'training set Accuracy': self.trainAcc,
@@ -237,31 +356,34 @@ def main():
                     'test set False negative ratio': self.testFN,
                     'test AUC score':self.testAUC,
                     'whole AUC score':self.WSAUC,
-
+                    'loss':self.loss,
+                    'hek293 AUC score':self.hekAUC,
+                    'hct116 AUC score':self.hctAUC,
+                    'hela AUC score':self.helaAUC,
+                    'hl60 AUC score':self.hlAUC,
                 })
-            df.to_csv("./TrainingOutputs/ClsAccuraciesFinal.csv")
+            df.to_csv(f"{save_location}/statistical_measures/ClsAccuraciesFinal.csv")
 
             
 
     # create model from classification
+    
     model=create_classification_model()
 
-    # loading encoder weights
-    model.load("./TrainingOutputs/autoencoder/autoencoderModel/Classification_Model/model.tfl")
-    
+
+    # load auto encoder model
+    model.load(f"{save_location}/autoencoderModel/model.tfl")
+
     monitorCallback = MonitorCallback()
 
     # start training with input as the X train data and target as Y train data
     # and validate/develop over X_dev and Y_dev
-    model.fit({'input': X}, {'target': Y}, n_epoch=200,batch_size=batch_size,
-    validation_set=({'input': X_div}, {'target': Y_div}),
+    model.fit({'input': X_train}, {'target': Y_train}, n_epoch=epochNum,batch_size=batch_size,
+    validation_set=({'input': X_dev}, {'target': Y_dev}),
     snapshot_step=1000,show_metric=True, callbacks=monitorCallback)
     
-    # save the model
-    model.save("./TrainingOutputs/classification/clsModel/finalModel/ClassificationModel.tfl")
-
-    # you can comment the tree lines above and uncomment this line so you can load your pretrained model
-    # model.load("./TrainingOutputs/classification/clsModel/ClassificationModel.tfl")
+    # save the last model
+    model.save(f"{save_location}/clsModel/finalModel/ClassificationModel.tfl")
 
 
     # measuring accuracy for test data
@@ -270,24 +392,22 @@ def main():
     
 
     cls_outpot = model.predict(X_test)
-    print(cls_outpot)
-    print(Y_test)
     test_acc = accuracyForCLSMODEL(cls_outpot,Y_test,low,high)
 
     # measuring accuracy for development data
-    cls_outpot = model.predict(X_div)
-    dev_acc = accuracyForCLSMODEL(cls_outpot,Y_div,low,high)
+    cls_outpot = model.predict(X_dev)
+    dev_acc = accuracyForCLSMODEL(cls_outpot,Y_dev,low,high)
 
     # measuring accuracy for train data
-    cls_outpot = model.predict(X)
-    train_acc = accuracyForCLSMODEL(cls_outpot,Y,low,high)
+    cls_outpot = model.predict(X_train)
+    train_acc = accuracyForCLSMODEL(cls_outpot,Y_train,low,high)
 
 
-    print(test_acc)
-    print(dev_acc)    
-    print(train_acc)
-    # print(model.evaluate(X_test,Y_test))
-    # print(model.evaluate(X_div,Y_div))
-    # print(model.evaluate(X,Y))
+    print(
+        "train Acc",train_acc,
+        "dev Acc",dev_acc,
+        "test Acc",test_acc
+    )
+
     
-main()
+scenario2(2)

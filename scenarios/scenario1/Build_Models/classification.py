@@ -40,11 +40,11 @@ def create_classification_model():
     for i in range(len(encoder_channel_size)):
         # creating the convolation layers
         if i == 1 or i == 3:
-            CLS = conv_2d(CLS,encoder_channel_size[i], [1, 3],strides=2,name=f"convEncoder_{i}")
+            CLS = conv_2d(CLS,encoder_channel_size[i], [1, 3],strides=2,name=f"convEncoder_{i}",restore=False)
         else:
-            CLS = conv_2d(CLS,encoder_channel_size[i], [1, 3],name=f"convEncoder_{i}")
+            CLS = conv_2d(CLS,encoder_channel_size[i], [1, 3],name=f"convEncoder_{i}",restore=False)
         # creating the batch normalization layers
-        CLS = batch_normalization(CLS,decay=0,name=f"BatchNormalizeEncoder_{i}")
+        CLS = batch_normalization(CLS,decay=0,name=f"BatchNormalizeEncoder_{i}",restore=False,trainable=False)
         CLS = CLS + betas[i]
 
         # end each layer with relu activation layer
@@ -58,13 +58,13 @@ def create_classification_model():
     for i in range(len(cls_channel_size)-1):
         # creating the convolation layers 
         if i==0:
-            CLS = conv_2d(CLS,cls_channel_size[i], [1, 3], strides=2,name=f"convCls_{i}")
+            CLS = conv_2d(CLS,cls_channel_size[i], [1, 3], strides=2,name=f"convCls_{i}",restore=False)
         if i==1:
-            CLS = conv_2d(CLS,cls_channel_size[i], [1, 3],name=f"convCls_{i}")
+            CLS = conv_2d(CLS,cls_channel_size[i], [1, 3],name=f"convCls_{i}",restore=False)
         if i==2:
-            CLS = conv_2d(CLS,cls_channel_size[i], [1, 3],name=f"convCls_{i}",padding='VALID')
+            CLS = conv_2d(CLS,cls_channel_size[i], [1, 3],name=f"convCls_{i}",padding='VALID',restore=False)
         # creating the batchnormalization layers 
-        CLS = batch_normalization(CLS,decay=0.99,name=f"BatchNormalizeCls_{i}")
+        CLS = batch_normalization(CLS,decay=0.99,name=f"BatchNormalizeCls_{i}",restore=False,trainable=False)
 
         #end each layer with relu activation layer
         CLS = activation(CLS,activation='relu', name=f'cls_relu_{i}')
@@ -79,7 +79,7 @@ def create_classification_model():
     
     # we define our optimizer and loss functions and learning rate in the regression layer 
     CLS = regression(CLS, optimizer='adam', learning_rate=0.001,metric=accuracy()
-        , loss='binary_crossentropy', name='target', restore=False)
+        , loss='binary_crossentropy', name='target',restore=False)
     # binary_crossentropy
     # categorical_crossentropy
     # roc_auc_score
@@ -87,7 +87,7 @@ def create_classification_model():
 
     # creating the model
     model = tflearn.DNN(CLS,tensorboard_verbose=0,
-    tensorboard_dir = './checkpoints/classification/CP',
-    checkpoint_path = './checkpoints/classification/CP/checkpoint')
+    tensorboard_dir = './checkpoints/classification/CP/S1',
+    checkpoint_path = './checkpoints/classification/CP/S1/checkpoint')
 
     return model

@@ -3,7 +3,7 @@ from numpy.lib.npyio import save
 import tensorflow.compat.v1 as tf
 # tf.enable_eager_execution()
 import tflearn
-from scenario1.Build_Models.classification import create_classification_model
+from Build_Models.classification import create_classification_model
 from sklearn.model_selection import train_test_split
 import pandas as pd 
 import numpy as np
@@ -65,7 +65,7 @@ def createROCCurve(model,X_test,Y_test,model_name):
     plt.close() 
 
 
-def scenario1():
+def scenario1(epochNum):
 
     # --------------- loading Data --------------- #
     files = ['hek293t_doench.episgt','hct116_hart.episgt','hl60_xu.episgt','hela_hart.episgt']
@@ -75,7 +75,7 @@ def scenario1():
     dataArr_labels_train =   np.array([None]*4)
     dataArr_labels_test  =   np.array([None]*4)
 
-    # loading every piece 
+    # loading every piece in one big data
     for i in range(4):
         files[i]=files[i][:files[i].index('.')]
         x=np.load(f"./training_data/inputs_{files[i]}_CLS.npy" )
@@ -93,6 +93,8 @@ def scenario1():
     dataArr_inputs_test      = np.concatenate((dataArr_inputs_test))
     dataArr_labels_train     = np.concatenate((dataArr_labels_train))
     dataArr_labels_test      = np.concatenate((dataArr_labels_test))
+
+    # loading every piece on its own
     
     dataArr_inputs_test_hek293t=np.load(f"./training_data/inputs_hek293t_doench_test_CLS.npy")
     dataArr_labels_test_hek293t=np.load(f"./training_data/labels_hek293t_doench_test_CLS.npy")
@@ -102,7 +104,7 @@ def scenario1():
 
     dataArr_inputs_test_hl60=np.load(f"./training_data/inputs_hl60_xu_test_CLS.npy")
     dataArr_labels_test_hl60=np.load(f"./training_data/labels_hl60_xu_test_CLS.npy")
-
+    
     dataArr_inputs_test_hela=np.load(f"./training_data/inputs_hela_hart_test_CLS.npy")
     dataArr_labels_test_hela=np.load(f"./training_data/labels_hela_hart_test_CLS.npy")
 
@@ -119,9 +121,17 @@ def scenario1():
     # Reshaping the arrays
     dataArr_inputs_train = dataArr_inputs_train.transpose([0, 2, 3, 1])
     dataArr_inputs_test = dataArr_inputs_test.transpose([0, 2, 3, 1])
+    dataArr_inputs_test_hek293t=dataArr_inputs_test_hek293t.transpose([0, 2, 3, 1])
+    dataArr_inputs_test_hct116=dataArr_inputs_test_hct116.transpose([0, 2, 3, 1])
+    dataArr_inputs_test_hl60=dataArr_inputs_test_hl60.transpose([0, 2, 3, 1])
+    dataArr_inputs_test_hela=dataArr_inputs_test_hela.transpose([0, 2, 3, 1])
 
     dataArr_labels_train=dataArr_labels_train.reshape((-1))
     dataArr_labels_test=dataArr_labels_test.reshape((-1))
+    dataArr_labels_test_hek293t=dataArr_labels_test_hek293t.reshape((-1))
+    dataArr_labels_test_hct116=dataArr_labels_test_hct116.reshape((-1))
+    dataArr_labels_test_hl60=dataArr_labels_test_hl60.reshape((-1))
+    dataArr_labels_test_hela=dataArr_labels_test_hela.reshape((-1))
 
     # Checking the dimensions
     print("loaded data dimensions recheck")
@@ -315,6 +325,8 @@ def scenario1():
             df.to_csv(f"{save_location}/statistical_measures/ClsAccuracies.csv")
 
         def on_train_end(self,training_state):
+            print(self.loss.__len__())
+            print(self.hlAUC.__len__())
             # saving all statistical measures when training ends
             df=pd.DataFrame(
                 {
@@ -349,20 +361,20 @@ def scenario1():
                     'hct116 AUC score':self.hctAUC,
                     'hela AUC score':self.helaAUC,
                     'hl60 AUC score':self.hlAUC,
-
                 })
             df.to_csv(f"{save_location}/statistical_measures/ClsAccuraciesFinal.csv")
 
             
 
     # create model from classification
+    
     model=create_classification_model()
 
     monitorCallback = MonitorCallback()
 
     # start training with input as the X train data and target as Y train data
     # and validate/develop over X_dev and Y_dev
-    model.fit({'input': X_train}, {'target': Y_train}, n_epoch=50,batch_size=batch_size,
+    model.fit({'input': X_train}, {'target': Y_train}, n_epoch=epochNum,batch_size=batch_size,
     validation_set=({'input': X_dev}, {'target': Y_dev}),
     snapshot_step=1000,show_metric=True, callbacks=monitorCallback)
     
@@ -394,4 +406,4 @@ def scenario1():
     )
 
     
-# scenario1()
+scenario1(2)
