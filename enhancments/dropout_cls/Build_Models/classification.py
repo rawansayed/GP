@@ -47,6 +47,8 @@ def create_classification_model():
         CLS = batch_normalization(CLS,decay=0,name=f"BatchNormalizeEncoder_{i}",trainable=False)
         CLS = CLS + betas[i]
 
+        CLS = dropout(CLS,0.7,name=f'encoder_Dropout_{i}')
+
         # end each layer with relu activation layer
         CLS = activation(CLS,activation='relu', name=f'encoder_relu_{i}')
         
@@ -65,6 +67,8 @@ def create_classification_model():
             CLS = conv_2d(CLS,cls_channel_size[i], [1, 3],name=f"convCls_{i}",padding='VALID',restore=False)
         # creating the batchnormalization layers 
         CLS = batch_normalization(CLS,decay=0.99,name=f"BatchNormalizeCls_{i}",restore=False,trainable=False)
+
+        CLS = dropout(CLS,0.7,name=f'cls_Dropout_{i}')
 
         #end each layer with relu activation layer
         CLS = activation(CLS,activation='relu', name=f'cls_relu_{i}')

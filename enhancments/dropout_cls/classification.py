@@ -65,7 +65,7 @@ def createROCCurve(model,X_test,Y_test,model_name):
     plt.close() 
 
 
-def scenario3(epochNum):
+def dropout_cls(epochNum):
 
     # --------------- loading Data --------------- #
     files = ['hek293t_doench.episgt','hct116_hart.episgt','hl60_xu.episgt','hela_hart.episgt']
@@ -410,4 +410,4 @@ def scenario3(epochNum):
     )
 
     
-scenario3(75)
+dropout_cls(75)

@@ -41,6 +41,8 @@ def create_regression_model():
         REG = batch_normalization(REG, decay = 0, name = f"BatchNormalizeEncoder_{i}", trainable=False)     
         REG = REG + betas[i]
 
+        REG = dropout(REG,0.7,name=f'encoder_Dropout_{i}')
+
         # end each layer with relu activation layer
         REG = activation(REG, activation = 'relu', name = f'encoder_relu_{i}')
 
@@ -58,6 +60,10 @@ def create_regression_model():
             REG = conv_2d(REG, reg_channel_size[i], [1, 3], name = f"convReg_{i}", restore = False, padding = 'VALID')
         # creating the batchnormalization layers 
         REG = batch_normalization(REG, decay = 0.99, name = f"BatchNormalizeReg_{i}", restore = False,trainable=False)
+        
+        REG = dropout(REG,0.7,name=f'reg_Dropout_{i}')
+
+        
         #end each layer with relu activation layer
         REG = activation(REG, activation = 'relu', name = f'reg_relu_{i}')
         
