@@ -17,7 +17,7 @@ print(save_location)
 
 
 
-def scenario6(epochNum):
+def attention_reg(epochNum):
     # --------------- loading Data --------------- #
     files = ['hek293t.episgt','hela.episgt','hct116.episgt','hl60.episgt']
 
@@ -262,4 +262,4 @@ def scenario6(epochNum):
     # save the model
     model.save(f"{save_location}/regModel/finalModel/RegressionModel.tfl")
 
-scenario6(75)
+attention_reg(75)
