@@ -131,7 +131,7 @@ def create_regression_model():
         REG = batch_normalization(REG, decay = 0, name = f"BatchNormalizeEncoder_{i}", trainable=False)     
         REG = REG + betas[i]
 
-        REG = attention(REG,encoder_channel_size[i],name = f"encoder_attention_{i}")
+        REG = attention(REG,encoder_channel_size[i],name = f"encoder_attention_{i}",restore=False)
 
         # end each layer with relu activation layer
         REG = activation(REG, activation = 'relu', name = f'encoder_relu_{i}')

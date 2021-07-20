@@ -134,7 +134,7 @@ def create_classification_model():
         CLS = batch_normalization(CLS,decay=0,name=f"BatchNormalizeEncoder_{i}",trainable=False)
         CLS = CLS + betas[i]
 
-        CLS = attention(CLS,encoder_channel_size[i],name = f"encoder_attention_{i}")
+        CLS = attention(CLS,encoder_channel_size[i],name = f"encoder_attention_{i}",restore=False)
 
         # end each layer with relu activation layer
         CLS = activation(CLS,activation='relu', name=f'encoder_relu_{i}')

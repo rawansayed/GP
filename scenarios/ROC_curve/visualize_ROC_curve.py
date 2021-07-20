@@ -68,9 +68,35 @@ def createROCCurveWithOutScenario4():
     plt.savefig(f"{save_location}/roc without scenario 4",dpi=300)
     plt.close()
 
+def createROCCurveWithEnhancments():
+    for i in range(1,4):
+        fpr= np.load(f"{load_location}/scenario{i}/statistical_measures/fpr_ThirdBest.npy")
+        tpr= np.load(f"{load_location}/scenario{i}/statistical_measures/tpr_ThirdBest.npy")
+        if i==1:
+            plt.plot(fpr, tpr, linestyle='--', color=colors[i],label=f"CNN model")
+        if i==2:
+            plt.plot(fpr, tpr, linestyle='--', color=colors[i],label=f"pt (CNN)")
+        if i==3:
+            plt.plot(fpr, tpr, linestyle='--', color=colors[i],label=f"pt+Aug (CNN)")    
 
+    fpr= np.load(f"enhancments/attention_cls/statistical_measures/fpr_ThirdBest.npy")
+    tpr= np.load(f"enhancments/attention_cls/statistical_measures/tpr_ThirdBest.npy")
+    plt.plot(fpr, tpr, linestyle='--', color=colors[4],label=f"attention pt+Aug (CNN)")
+
+    fpr= np.load(f"enhancments/dropout_cls/statistical_measures/fpr_ThirdBest.npy")
+    tpr= np.load(f"enhancments/dropout_cls/statistical_measures/tpr_ThirdBest.npy")
+    plt.plot(fpr, tpr, linestyle='--', color=colors[6],label=f"dropout pt+Aug (CNN)")
+
+
+    plt.title('ROC curve')
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive rate')
+    plt.legend(loc='best')
+    plt.savefig(f"{save_location}/roc with Enhancments",dpi=300)
+    plt.close()
 
 
 
 createROCCurve()
 createROCCurveWithOutScenario4()
+createROCCurveWithEnhancments()

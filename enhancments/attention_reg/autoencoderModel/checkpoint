@@ -1,0 +1,2 @@
+model_checkpoint_path: "/media/elnouby/New Volume/Study/GP/GP/enhancments/attention_reg_with_no_fine_tuning/autoencoderModel/model.tfl"
+all_model_checkpoint_paths: "/media/elnouby/New Volume/Study/GP/GP/enhancments/attention_reg_with_no_fine_tuning/autoencoderModel/model.tfl"

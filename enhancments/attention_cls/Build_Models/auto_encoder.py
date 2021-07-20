@@ -128,7 +128,6 @@ def create_auto_encoder():
         AE = AE + betas[i]
         # AE = tf.math.add( AE, betas, name=f'add_beta_{i}')
 
-        AE = attention(AE,encoder_channel_size[i],name = f"encoder_attention_{i}")
 
 
         # end each layer with relu activation layer
@@ -152,7 +151,6 @@ def create_auto_encoder():
         # creating the batch normalization layers
         AE = batch_normalization(AE,decay=0,name=f"BatchNormalizeDecoder_{i}")#,trainable=False
         
-        AE = attention(AE,decoder_channel_size[i],name = f"decoder_attention_{i}")
 
         
         # end each layer with sigmoid activation layer
