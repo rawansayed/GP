@@ -1,4 +1,4 @@
-from utils import Episgt
+from ontarget import Episgt
 import numpy as np
 
 dict = "./database/paper_data-classification/paper_data/ontar"

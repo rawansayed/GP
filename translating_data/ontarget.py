@@ -6,7 +6,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 
-__all__ = ['Sgt', 'Episgt', 'Epiotrt']
+__all__ = ['Episgt']
 # sgt:ontarget_sequence only, episgt:ontarget, epiotrt:offtarget
 
 ntmap = {'A': (1, 0, 0, 0),
@@ -29,33 +29,7 @@ def get_epicode(eseq):
 # print (x)
 # y= get_epicode('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANNNNNNNNNNNNNNNNNNNNNNN')
 # print (y)
-class Sgt:
-    def __init__(self, fpath, with_y=True):
-        self._fpath = fpath
-        self._ori_df = pd.read_csv(fpath, sep='\t', index_col=None, header=None)
-        self._with_y = with_y
-        self._num_cols = 2 if with_y else 1
-        # print("self._num_cols",self._num_cols)
-        self._cols = list(self._ori_df.columns)[-self._num_cols:]
-        # print("self._cols",self._cols)
-        self._df = self._ori_df[self._cols]
-        # print(self._df)
 
-    @property
-    def length(self):
-        return len(self._df)
-
-    def get_dataset(self, x_dtype=np.float32, y_dtype=np.float32):
-        x_seq = np.concatenate(list(map(get_seqcode, self._df[self._cols[0]])))
-        # print("X_seq",x_seq)
-        x = x_seq.astype(dtype=x_dtype)
-        x = x.transpose(0, 2, 1)
-        if self._with_y:
-            y = np.array(self._df[self._cols[-1]]).astype(y_dtype)
-            # print("Y ",y)
-            return x, y
-        else:
-            return x
 
 class Episgt:
     def __init__(self, fpath, num_epi_features, with_y=True):
