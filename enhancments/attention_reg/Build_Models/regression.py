@@ -120,7 +120,6 @@ def create_regression_model():
     REG = input_data(shape = [None, 1, 23, 8], name = 'input')
 
     # Start the encoder layers 
-    # all these layer have the the trainable pararmetar = False so it doesnot overwrite our trained weights
     for i in range(len(encoder_channel_size)):
         # creating the convolation layers
         if i == 1 or i == 3:
