@@ -1,6 +1,36 @@
 from Build_Models.regression import create_regression_model 
 from Build_Models.regression_dropout import create_regression_model_with_dropout
 from Build_Models.regression_attention import create_regression_model_with_attention
+from scipy.stats import spearmanr
+from sklearn.metrics import mean_squared_error
+import numpy as np
+ # --------------- loading Data --------------- #
+files = ['hek293t.episgt','hela.episgt','hct116.episgt','hl60.episgt']
+dataArr_inputs_test  =   np.array([None]*4)
+dataArr_labels_test  =   np.array([None]*4)
+# loading every piece in one big data
+for i in range(4):
+    files[i]=files[i][:files[i].index('.')]
+    x=np.load(f"./training_data/inputs_{files[i]}_test_REG.npy")
+    dataArr_inputs_test[i]     =   x
+    x=np.load(f"./training_data/labels_{files[i]}_test_REG.npy")
+    dataArr_labels_test[i]     =   x
+# concatente the array of 4 to get one array 
+dataArr_inputs_test      = np.concatenate((dataArr_inputs_test))
+dataArr_labels_test      = np.concatenate((dataArr_labels_test))
+dataArr_inputs_test = dataArr_inputs_test.transpose([0, 2, 3, 1])
+dataArr_labels_test=dataArr_labels_test.reshape((-1))
+X_test=dataArr_inputs_test
+Y_test=dataArr_labels_test
+
+
+
+
+
+
+
+
+
 
 def pretrained_reg_model(enhancment="no enhancment"):
     
@@ -129,5 +159,3 @@ Test MSE value : 0.026292099
 
 
 
-
-scenario1()

@@ -1,6 +1,83 @@
 from Build_Models.classification import create_classification_model 
 from Build_Models.classification_dropout import create_classification_model_with_dropout
 from Build_Models.classification_attention import create_classification_model_with_attention
+import numpy as np
+import matplotlib as plt
+from sklearn.metrics import roc_curve,roc_auc_score
+
+
+
+# --------------- creating a function to measure statistical measurments --------------- #
+def accuracyForCLSMODEL(X_pred,Y_true,lowThresh,highThresh):
+
+    for i in range(len(X_pred)):
+        X_pred[i] = 1 if X_pred[i]>=highThresh else X_pred[i]
+        X_pred[i] = 0 if X_pred[i]<=lowThresh else X_pred[i]
+        X_pred[i] = 2 if highThresh>X_pred[i] and X_pred[i]>lowThresh else X_pred[i]
+    correctArray=X_pred==Y_true
+    correct = np.sum(correctArray)
+    unpridected=np.sum(X_pred==2)
+    zeros=np.sum(X_pred==0)
+    correctZeros=np.sum(X_pred[correctArray]==0)
+    ones=np.sum(X_pred==1)
+    correctOnes=np.sum(X_pred[correctArray]==1)
+    AccuracyMesaure= (correct)/(Y_true.shape[0]-unpridected)
+    # print(X_pred.reshape((-1,)),Y_true.reshape((-1,)),X_pred.shape,Y_true.shape)
+    # print("correct:",correct,
+    # "zeros:",zeros,"correct Zeros",correctZeros,
+    # "ones:",ones,"correct ones",correctOnes,
+    # "unpridected:",unpridected,"size:",Y_true.shape[0]
+    # ,"Accuracy:",AccuracyMesaure)
+    TP=correctOnes
+    TN=correctZeros
+    FP=ones-correctOnes
+    FN=zeros-correctZeros
+    Precition=TP/(TP+FP)
+    Recall=TP/(TP+FN)
+    F1=2*Precition*Recall/(Precition+Recall)
+    TP=TP/Y_true.shape[0]
+    TN=TN/Y_true.shape[0]
+    FP=FP/Y_true.shape[0]
+    FN=FN/Y_true.shape[0]
+    return AccuracyMesaure*100 ,TP*100 ,TN*100 ,FP*100 ,FN*100 ,Precition*100 ,Recall*100 ,F1*100 
+
+# --------------- creating a function to save roc curve for every best model --------------- #
+def createROCCurve(model,X_test,Y_test,model_name):
+    PredProb=model.predict(X_test)
+    fpr,tpr, thresh1 =roc_curve(Y_test,PredProb)
+    np.save("./run_model/output/statistical_measures/fpr_CLS.npy",fpr)
+    np.save("./run_model/output/statistical_measures/tpr_CLS.npy",tpr)
+    plt.plot(fpr, tpr, linestyle='--', color='blue')
+    plt.title('ROC curve')
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive rate')
+    plt.legend(loc='best')
+    plt.savefig("./run_model/output/statistical_measures/ROCforCLS",dpi=300)
+    plt.close() 
+
+
+
+# --------------- loading test Data --------------- #
+files = ['hek293t_doench.episgt','hct116_hart.episgt','hl60_xu.episgt','hela_hart.episgt']
+
+dataArr_inputs_test  =   np.array([None]*4)
+dataArr_labels_test  =   np.array([None]*4)
+
+# loading every piece in one big data
+for i in range(4):
+    files[i]=files[i][:files[i].index('.')]
+    x=np.load(f"./training_data/inputs_{files[i]}_test_CLS.npy")
+    dataArr_inputs_test[i]     =   x
+    x=np.load(f"./training_data/labels_{files[i]}_test_CLS.npy")
+    dataArr_labels_test[i]     =   x
+# concatenate and reshape
+dataArr_inputs_test      = np.concatenate((dataArr_inputs_test))
+dataArr_labels_test      = np.concatenate((dataArr_labels_test))
+dataArr_inputs_test = dataArr_inputs_test.transpose([0, 2, 3, 1])
+dataArr_labels_test=dataArr_labels_test.reshape((-1))
+X_test=dataArr_inputs_test
+Y_test=dataArr_labels_test
+
 
 def pretrained_cls_model(enhancment="no enhancment"):
     
